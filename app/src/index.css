@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;700&family=Inter:wght@300;500;800&display=swap');
+@import 'katex/dist/katex.min.css';
+
+:root {
+  --color-bg: #0a001a; /* Deep Midnight Purple */
+  --color-primary: #9d00ff; /* Ultraviolet */
+  --color-secondary: #ff00f0; /* Y2K Pink */
+  --color-text: #e0d4ff;
+  --color-text-dim: #735c9e;
+  
+  --font-mono: 'Fira Code', monospace;
+  --font-sans: 'Inter', sans-serif;
+
+  --glitch-offset-1: 2px;
+  --glitch-offset-2: -2px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  overflow: hidden; /* Lock scroll as it's an experience */
+  width: 100vw;
+  height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+/* Base Terminal Styling */
+::selection {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+/* Animations for instability */
+@keyframes crt-flicker {
+  0% { opacity: 0.95; }
+  5% { opacity: 0.85; }
+  10% { opacity: 0.95; }
+  15% { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+@keyframes glitch-shake {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(2px, -1px); }
+  60% { transform: translate(-1px, 2px); }
+  80% { transform: translate(1px, -2px); }
+  100% { transform: translate(0, 0); }
+}
+
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+}
+
+.glitch-text::before {
+  color: #0ff;
+  z-index: -1;
+  transform: translate(var(--glitch-offset-1), var(--glitch-offset-2));
+}
+
+.glitch-text::after {
+  color: #f0f;
+  z-index: -2;
+  transform: translate(calc(var(--glitch-offset-1) * -1), calc(var(--glitch-offset-2) * 1));
+}
+
+.unstable-container {
+  /* This gets dynamically hooked to sigma values */
+  transition: filter 0.1s ease-in-out, transform 0.1s ease-in-out;
+}

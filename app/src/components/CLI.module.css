@@ -1,0 +1,86 @@
+.cli_container {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  width: 450px;
+  max-width: 90vw;
+  height: 350px;
+  background: rgba(10, 0, 26, 0.85);
+  border: 1px solid rgba(157, 0, 255, 0.4);
+  box-shadow: 0 0 10px rgba(157, 0, 255, 0.1);
+  padding: 1.5rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  color: var(--color-primary);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.terminal {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.logs {
+  flex: 1;
+  overflow-y: auto;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+/* Hide scrollbar for a cleaner look */
+.logs::-webkit-scrollbar {
+  width: 4px;
+}
+.logs::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+.logs::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+}
+
+.log_line {
+  margin-bottom: 8px;
+  text-shadow: 0 0 4px rgba(157, 0, 255, 0.5);
+}
+
+.input_line {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.prompt {
+  margin-right: 10px;
+  color: #fff;
+}
+
+.input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  text-shadow: 0 0 4px #fff;
+}
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 16px;
+  background: #fff;
+  animation: blink 1s step-end infinite;
+  margin-left: 4px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}

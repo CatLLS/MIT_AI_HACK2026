@@ -1,0 +1,27 @@
+.formula_container {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  background: rgba(10, 0, 26, 0.85);
+  border: 1px solid rgba(157, 0, 255, 0.4);
+  padding: 1rem 2rem;
+  border-radius: 4px;
+  color: #fff;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  min-width: 300px;
+  box-shadow: 0 0 15px rgba(255, 0, 240, 0.1);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+  letter-spacing: 1px;
+}
+
+.math_content {
+  font-size: 1.25rem;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
