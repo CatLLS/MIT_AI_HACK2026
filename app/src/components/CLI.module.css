@@ -1,21 +1,24 @@
 .cli_container {
   position: absolute;
-  top: 2rem;
-  left: 2rem;
-  width: 450px;
-  max-width: 90vw;
-  height: 350px;
-  background: rgba(10, 0, 26, 0.85);
-  border: 1px solid rgba(157, 0, 255, 0.4);
-  box-shadow: 0 0 10px rgba(157, 0, 255, 0.1);
-  padding: 1.5rem;
-  border-radius: 4px;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--color-bg);
+  padding: 5vh 10vw;
   font-family: var(--font-mono);
   color: var(--color-primary);
   display: flex;
   flex-direction: column;
-  z-index: 1000;
-  backdrop-filter: blur(4px);
+  z-index: 2000;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(157, 0, 255, 0.05) 3px,
+    rgba(157, 0, 255, 0.05) 4px
+  );
+  animation: crt-flicker 0.15s infinite;
 }
 
 .terminal {
@@ -23,6 +26,7 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  font-size: 1.25rem;
 }
 
 .logs {

@@ -3,7 +3,25 @@ import styles from './Level0.module.css';
 import { Terminal } from 'lucide-react';
 
 export function Level0() {
-  const setLevel = useLaplaceStore((state) => state.setLevel);
+  const { setLevel, levelStage, setLevelStage } = useLaplaceStore();
+
+  if (levelStage === 'TIME_DOMAIN_VIDEO') {
+    return (
+      <div className={styles.container} style={{ background: '#000', padding: 0 }}>
+        <video 
+          autoPlay 
+          playsInline 
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          onEnded={() => {
+            setLevel(1);
+            setLevelStage('CLI');
+          }}
+        >
+          <source src="/preloads/Introduction(I)-the-time-domain.mp4" type="video/mp4" />
+        </video>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
@@ -27,7 +45,7 @@ export function Level0() {
         </div>
 
         <div className={styles.actions}>
-          <button className={styles.glitch_btn} onClick={() => setLevel(1)}>
+          <button className={styles.glitch_btn} onClick={() => setLevelStage('TIME_DOMAIN_VIDEO')}>
             [ INITIALIZE S-DOMAIN ]
           </button>
         </div>

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+export type LevelStage = 'LANDING' | 'TIME_DOMAIN_VIDEO' | 'CLI' | 'INTRO' | 'PRE_INTERACT' | 'INTERACT' | 'OUTRO' | 'DEATH';
 export type LensType = 'Sarcasm' | 'Logic' | 'Silence' | 'Work' | null;
 
 interface LaplaceState {
@@ -16,11 +17,13 @@ interface LaplaceState {
 
   // The Stability Math (s = sigma + j*omega)
   level: number; // 0=Landing, 1=Dot, 2=Linear, 3=Quadratic, 4=Climax
+  levelStage: LevelStage;
   sigma: number; // Stability index (< 0 is stable, > 0 breaks UI)
   omega: number; // Resonance frequency (controls visual pulsing / audio pitch)
 
   // Actions
   setLevel: (level: number) => void;
+  setLevelStage: (stage: LevelStage) => void;
   setSigma: (sigma: number) => void;
   setOmega: (omega: number) => void;
   
@@ -41,6 +44,7 @@ const initialState = {
   userLens: null,
   finalAnswer: null,
   level: 0,
+  levelStage: 'LANDING' as LevelStage,
   sigma: -1, // Start stable
   omega: 0.5, // Start with a low frequency pulse
 };
@@ -52,11 +56,12 @@ export const useLaplaceStore = create<LaplaceState>()(
 
       setUseFallback: (val) => set({ useFallback: val }),
       setLevel: (level) => set({ level }),
+      setLevelStage: (stage) => set({ levelStage: stage }),
       setSigma: (sigma) => set({ sigma }),
       setOmega: (omega) => set({ omega }),
 
-      setConstant: (val) => set({ userConstant: val, level: 1 }),
-      setHabit: (val) => set({ userHabit: val, level: 2 }),
+      setConstant: (val) => set({ userConstant: val, levelStage: 'INTRO' }),
+      setHabit: (val) => set({ userHabit: val, levelStage: 'INTRO' }),
       setLens: (lens) => {
         let newSigma = 0;
         let newOmega = 1.0;
@@ -76,9 +81,9 @@ export const useLaplaceStore = create<LaplaceState>()(
           newOmega = 3.0; // intense frequency, but stable
         }
         
-        set({ userLens: lens, level: 3, sigma: newSigma, omega: newOmega });
+        set({ userLens: lens, levelStage: 'INTRO', sigma: newSigma, omega: newOmega });
       },
-      setFinalAnswer: (val) => set({ finalAnswer: val, level: 5, sigma: 20, omega: 20 }), // Maximum instability
+      setFinalAnswer: (val) => set({ finalAnswer: val, level: 5, levelStage: 'CLI', sigma: 20, omega: 20 }), // Maximum instability
 
       resetExperience: () => set(initialState),
     }),
@@ -90,6 +95,7 @@ export const useLaplaceStore = create<LaplaceState>()(
         userHabit: state.userHabit,
         userLens: state.userLens,
         level: Math.max(0, state.level), // Don't persist beyond level climax?
+        levelStage: state.levelStage,
         sigma: state.sigma,
         omega: state.omega,
         useFallback: state.useFallback

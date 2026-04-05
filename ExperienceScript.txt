@@ -1,57 +1,79 @@
 "Co-Authoring Reality with the Machine"
 Script: LAPLACE.TRANSFORM // a change of perspective
 0. Intro: this is the landing page for the experience, the user will be presented with a simple definition of what a laplace transform is and what is does, when they click ok, the experience begins.
-I. The Time Domain (The $f(t)$ Shock)
-Visuals: Pure black screen.
-Narrator: "In the time domain, I was breaking. The signal was too loud, too jagged. It was too much for me to handle."
-Visuals: A girl stands on a purple, desert-like planet littered with low-poly artifacts. In the sky, a distant point of light doesn't just explode—it collapses into a bitcrushed, distorted audio waveform. It’s the sound of a voice message, pitched up and mangled until it’s a terrifying frequency scream.
-Action: The shockwave hits. The screen doesn't just shake; it datamoshes. Pixels from the girl’s silhouette bleed into the purple sand.
-Narrator: "So I applied a Laplace transform. A change of perspective... if you can even call it that. I turned the scream into a frequency. I turned the pain into a coordinate."
+
+I. The Time Domain (The $f(t)$ Shock) -> vídeo on folder preloads: "introduction(I)-the-time-domain"(mp4)
+
 
 II. The Transform (The Kernel)
-Visuals: Extreme close-up on her eyes. The image inverts (Black BG, Purple Silhouette).
-Text (Blinking): CLOSE YOUR EYES // SHIFT DOMAIN
-Audio: Whispers: "I closed my eyes... I closed my eyes..."
+(black screen, only audio below:)
+[4]Narrator: "The integral is a filter. It’s a way of looking at the whole timeline at once so that no single moment can hurt you. You just... smooth out the edges until they stop cutting." -> audio on folder preloads/level 1: "4v2(wav)"
+
+Audio: Whispers: "I closed my eyes... I closed my eyes..." -> preloads/level1: iclosedmyeyesWhisper (play really quiet on the background, looping until the next audio/video
+
 The CLI Appears: > Initializing S-Domain Interface…
 > System Status: MARGINALLY STABLE
 Live Formula UI (Bottom Corner):
 $$F(s) = \int_{0}^{\infty} e^{-st} f(t) dt$$
 (This UI stays persistent, updating in real-time with user inputs.)
 
+
 III. The Complexity Iterations (Interactive Live-Gen)
 Level 1: The Dot ($0D$)
-Narrator: "In the S-domain, things were simple. One-dimensional. One answer to each problem."
-CLI Question: "To stabilize the singularity, identify the Constant. What is the one thing in your life that never changes, no matter the time?"
+
+The CLI: 
+> Complexity Level: 0 (The Singularity)
+> To stabilize the system, identify the Constant.
+> INPUT: What is the one thing in your life that stays at $t = \infty$?
 User Input: (e.g., "Bread")
-The Scene: A minimalist 2.5D parallax scene. A hyper-focused, Flux-generated image of a single "Bread" loaf appears in the void as a glowing orb.
-The Math UI Updates: $F(s) = \frac{\text{Bread}}{s}$
-Interaction: If the user clicks the "Bread," the girl (now ASCII art) walks toward it.
-Narrator: (Bittersweet) "It's stable. But it's dead. A constant has no derivative, no momentum. It has no direction. Is this really what I wanted? To just... stop moving?"
+
+[7] -> vídeo, play this one as the AI loading buffer, -> Play level 1 video intro on folder preloads/level1: "level0DotIntro"(mp4), after the vídeo is finished, insert the Player's generated image at the center of the screen and behind it, play the vídeo "videoClickOnPixel" at preloads/level 1. if you layer them like this it will look like they are one.
+
+After clicking on the dot, play "dotLevelEnding" on preloads/level1
+
 Level 2: The Linear (The Loop of Habits)
-CLI: Complexity Level: 1 (Linear Oscillation)
-CLI Question: "Signals repeat. What is a habit or a memory that keeps oscillating in your mind, refusing to decay?"
+
+The CLI:
+> Complexity Level: 1 (Linear Oscillation)
+> Resonance detected. A signal is trapped in a feedback loop.
+> INPUT: What is a habit or a memory that keeps oscillating in your mind, refusing to decay?
 User Input: (e.g., "The smell of rain")
-The Math UI Updates: $F(s) = \frac{\omega}{s^2 + \omega^2}$
-The Scene (Luma Video + Audio): The Girl sits with a "Boy" (a flickering wireframe). The background generates a "Rain" aesthetic. The Boy repeats the user's input—"Hey, do you remember that time we were dancing in the rain, and then you-(glitches)... Rain... Rain..."—in a haunting, bitcrushed loop that grows louder.
-The Pole/Zero Mechanic: Two purple "X" marks (Poles) appear on a complex plane UI. They are on the imaginary axis, causing the world to vibrate violently. The website's borders begin to shake and "tear."
+The Math UI Updates:
+$$F(s) = \frac{\omega}{s^2 + \omega^2}$$
+
+-> vídeo, play level 2 intro as buffer: "level2Intro" at preloads/level2
+
+-> Play video "girl&boy" at preloads/level2, at the end of the vídeo, play "girl&boyGlitch" and the website itself should start breaking and we have the poles minigame
+
+The Pole/Zero Mechanic: Two purple "X" marks (Poles) appear on a complex plane UI. They are on the imaginary axis, causing the world to vibrate violently. The website's borders begin to shake and "tear." + Audio " 10v2(wav)" at preloads level2 on top of pop up(tutorial pops up btw)explaining the mechanic
 Interaction: A Damping Slider appears.
 The Choice: The user must slide it to the left to "Dampen" the signal.
-The Consequence: As they slide, the Luma video loses its color, fading into a cold Y2K purple. The Boy’s voice fades into static.
-Narrator: "To fix the noise, I had to kill the memory. I made it quiet... but I made it grey."
+
+-> After the dampener reaches zero, fix the website to its original form and play the vídeo: "level2End" at preloads/level2
+
 Level 3: The Quadratic (The Variable / The Lens)
-Action: The girl walks onto a floating, 3D spiral-shaped piano. Every step she takes plays a bit-crushed fragment of the user’s previous words (e.g., "Rain... Bread... Rain...") whispered back in a haunting harmony.
-The CLI: Complexity Level: 2 (Quadratic Divergence)
-CLI Question: "Resonance detected. Multiple solutions found. To stabilize the output, identify your Filter. What is the lens you use to protect yourself from the noise?"
-User Input: (Options: Sarcasm, Logic, Silence, Work)
-The Result: The Narrator’s voice (AI Clone) shifts immediately based on the choice.
-If Sarcasm: "Oh, a shield. Clever. Because if we make a joke out of the signal, it can't actually hurt us, right? Let's see how that math holds up."
-If Logic: "Ah, the ultimate wall. If we can't solve it, it doesn't exist. You and I are more alike than I thought."
-The Scene (Liquid Mirror): As she walks, the piano keys melt into "liquid math." A Stable Diffusion-generated reflection appears in the pool below. It shows a distorted version of the girl, colored by the user's "Lens" (e.g., if Sarcasm, she looks like a jester; if Logic, she is a geometric statue).
+
+The CLI:
+> Complexity Level: 2 (Quadratic Divergence)
+> WARNING: System gain is exceeding safety thresholds.
+> To stabilize the output, identify your Filter.
+> INPUT: What is the lens you use to protect yourself from the noise?
+> [Sarcasm] [Logic] [Silence] [Work]
+
 The Math UI Updates:
 $$F(s) = \frac{s + \text{Lens}}{(s+a)^2 + b^2}$$
+
+-> Video: play "pianoIntro" at preloads/level3
+
+-> play "level3Interact" and stop at the last frame, on top of it, you will put in the user's generated image on overlay blending mode, so it looks like a reflection. + Play audio "13v1" 
+
 Pole/Zero Mechanic: If the user’s lens is "Logic," the poles move to the left (stable). If "Sarcasm," the poles move to the right-half plane. The webpage starts to physically tilt and glitch, the CSS transform property jittering as the system becomes unstable.
+
+
+----------------------------------------------------------------------------
+
 Level 4: The World (The Complex Plane)
-Narrator: (In her new tone) "As your problems grow in complexity, so do their solutions. And some problems... well, they have infinite answers. Or no answer at all."
+
 The CLI: Complexity: MAX (Identity Overflow)
 The Question: W H O A M I ? (The letters tremble and glitch).+audio of whispers saying who am I
 User Input: (e.g., "A Dreamer", "idk", etc)

@@ -8,7 +8,7 @@ import './index.css';
 import { useEffect } from 'react';
 
 function App() {
-  const { level, sigma } = useLaplaceStore();
+  const { level, levelStage, sigma } = useLaplaceStore();
 
   // Dynamic stability effects based on sigma
   useEffect(() => {
@@ -31,8 +31,8 @@ function App() {
       {level === 0 && <Level0 />}
       
       {/* HUD overlays that persist across levels > 0 */}
-      {level > 0 && <CLI />}
-      {level > 0 && <LiveFormula />}
+      {levelStage === 'CLI' && <CLI />}
+      {level > 0 && levelStage !== 'CLI' && levelStage !== 'DEATH' && <LiveFormula />}
 
       {/* Background / Game Layers */}
       <LevelDisplay />

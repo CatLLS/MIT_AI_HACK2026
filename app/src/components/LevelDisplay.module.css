@@ -158,3 +158,81 @@
   opacity: 0.9;
   z-index: 2;
 }
+
+/* DEALTH SCREEN */
+.death_container {
+  width: 100vw;
+  height: 100vh;
+  background-color: #0b001a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 3000;
+  color: red;
+  font-family: var(--font-mono);
+  position: absolute;
+  top: 0; left: 0;
+}
+
+.death_message h1 {
+  font-family: var(--font-sans);
+  font-size: 3rem;
+  letter-spacing: 5px;
+  color: #ff003c;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 15px rgba(255, 0, 60, 0.8);
+}
+
+.death_message p {
+  font-size: 1.2rem;
+  color: #fff;
+  margin-bottom: 3rem;
+  opacity: 0.8;
+}
+
+.reboot_btn {
+  background: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  transition: all 0.2s;
+}
+
+.reboot_btn:hover {
+  background: #ff003c;
+  border-color: #ff003c;
+  box-shadow: 0 0 15px #ff003c;
+}
+
+/* L2 INSTRUCTION POPUP */
+.instruction_popup {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 0, 60, 0.1);
+  border: 1px solid rgba(255, 0, 60, 0.6);
+  padding: 2rem;
+  max-width: 600px;
+  text-align: center;
+  z-index: 100;
+  backdrop-filter: blur(5px);
+  animation: glitch-shake 0.5s infinite;
+}
+
+.instruction_popup h1 {
+  color: #ff003c;
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.instruction_popup p {
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}

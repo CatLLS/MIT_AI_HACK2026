@@ -29,14 +29,16 @@ export function CLI() {
         `> System Status: MARGINALLY STABLE (sigma: ${sigma.toFixed(1)})`,
         '> Complexity Level: 1 (Linear Initialization)',
         '> To stabilize the singularity, identify the Constant.',
-        '> What is the one thing in your life that never changes, no matter the time?'
+        '> What is the one thing in your life that never changes, no matter the time?',
+        '> [Options: Bread, Coffee, Sky]'
       ]);
     } else if (level === 2) {
       setLogs((prev) => [
         ...prev,
         '> Constant Locked. System processing...',
         '> Complexity Level: 2 (Linear Oscillation)',
-        '> Signals repeat. What is a habit or a memory that keeps oscillating in your mind, refusing to decay?'
+        '> Signals repeat. What is a habit or a memory that keeps oscillating in your mind, refusing to decay?',
+        '> [Options: Rain, Traffic, Wind]'
       ]);
     } else if (level === 3) {
       setLogs((prev) => [
@@ -67,27 +69,41 @@ export function CLI() {
     e.preventDefault();
     if (!inputValue.trim()) return;
 
-    setLogs((prev) => [...prev, `> ${inputValue}`]);
-
-    // Handle Logic
+    const normalized = inputValue.trim().toLowerCase();
+    
+    // Check required options based on level
     if (level === 1) {
-      setConstant(inputValue);
+      if (!['bread', 'coffee', 'sky'].includes(normalized)) {
+        setLogs((prev) => [...prev, `> ${inputValue}`, '[ERROR] Invalid Constant. Choose: Bread, Coffee, Sky']);
+        setInputValue('');
+        return;
+      }
+      setLogs((prev) => [...prev, `> ${inputValue}`]);
+      setConstant(normalized.charAt(0).toUpperCase() + normalized.slice(1));
     } else if (level === 2) {
-      setHabit(inputValue);
+      if (!['rain', 'traffic', 'wind'].includes(normalized)) {
+        setLogs((prev) => [...prev, `> ${inputValue}`, '[ERROR] Invalid Habit. Choose: Rain, Traffic, Wind']);
+        setInputValue('');
+        return;
+      }
+      setLogs((prev) => [...prev, `> ${inputValue}`]);
+      setHabit(normalized.charAt(0).toUpperCase() + normalized.slice(1));
     } else if (level === 3) {
-      const normalized = inputValue.trim().toLowerCase();
       if (['sarcasm', 'logic', 'silence', 'work'].includes(normalized)) {
         const lensLiteral = normalized.charAt(0).toUpperCase() + normalized.slice(1) as 'Sarcasm' | 'Logic' | 'Silence' | 'Work';
+        setLogs((prev) => [...prev, `> ${inputValue}`]);
         setLens(lensLiteral);
       } else {
-        setLogs((prev) => [...prev, '[ERROR] Invalid Lens. Choose: Sarcasm, Logic, Silence, Work']);
+        setLogs((prev) => [...prev, `> ${inputValue}`, '[ERROR] Invalid Lens. Choose: Sarcasm, Logic, Silence, Work']);
         setInputValue('');
         return;
       }
     } else if (level === 4) {
+      setLogs((prev) => [...prev, `> ${inputValue}`]);
       setFinalAnswer(inputValue);
     } else if (level === 5) {
-      if (inputValue.trim().toLowerCase() === 'y') {
+      setLogs((prev) => [...prev, `> ${inputValue}`]);
+      if (normalized === 'y') {
         useLaplaceStore.getState().setLevel(6); // Trigger 360 climax
       }
     }
@@ -95,8 +111,8 @@ export function CLI() {
     setInputValue('');
   };
 
-  // If level 0 or >=6, CLI is hidden or changes state
-  if (level === 0 || level > 5) return null;
+  // If level 0 or >=6, or not in CLI stage, it is hidden
+  if (level === 0 || level > 5 || useLaplaceStore.getState().levelStage !== 'CLI') return null;
 
   return (
     <div className={`${styles.cli_container} ${sigma > 0 ? 'glitch-text' : ''}`}>
