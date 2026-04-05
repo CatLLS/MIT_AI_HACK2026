@@ -33,35 +33,47 @@ export function CLI() {
         '> [Options: Bread, Coffee, Sky]'
       ]);
     } else if (level === 2) {
-      setLogs((prev) => [
-        ...prev,
-        '> Constant Locked. System processing...',
-        '> Complexity Level: 2 (Linear Oscillation)',
-        '> Signals repeat. What is a habit or a memory that keeps oscillating in your mind, refusing to decay?',
-        '> [Options: Rain, Traffic, Wind]'
-      ]);
+      setLogs((prev) => {
+        if (prev.includes('> Complexity Level: 2 (Linear Oscillation)')) return prev;
+        return [
+          ...prev,
+          '> Constant Locked. System processing...',
+          '> Complexity Level: 2 (Linear Oscillation)',
+          '> Signals repeat. What is a habit or a memory that keeps oscillating in your mind, refusing to decay?',
+          '> [Options: Rain, Traffic, Wind]'
+        ];
+      });
     } else if (level === 3) {
-      setLogs((prev) => [
-        ...prev,
-        '> Loop identified. Resonance detected...',
-        '> Multiple solutions found. To stabilize the output, identify your Filter.',
-        '> What is the lens you use to protect yourself from the noise?',
-        '> [Options: Sarcasm, Logic, Silence, Work]'
-      ]);
+      setLogs((prev) => {
+        if (prev.includes('> Loop identified. Resonance detected...')) return prev;
+        return [
+          ...prev,
+          '> Loop identified. Resonance detected...',
+          '> Multiple solutions found. To stabilize the output, identify your Filter.',
+          '> What is the lens you use to protect yourself from the noise?',
+          '> [Options: Sarcasm, Logic, Silence, Work]'
+        ];
+      });
     } else if (level === 4) {
-      setLogs((prev) => [
-        ...prev,
-        '> Evaluating Filter...',
-        '> Complexity: MAX (Identity Overflow)',
-        '> W H O A M I ?'
-      ]);
+      setLogs((prev) => {
+        if (prev.includes('> Complexity: MAX (Identity Overflow)')) return prev;
+        return [
+          ...prev,
+          '> Evaluating Filter...',
+          '> Complexity: MAX (Identity Overflow)',
+          '> W H O A M I ?'
+        ];
+      });
     } else if (level === 5) {
-      setLogs((prev) => [
-        ...prev,
-        '> FATAL ERROR: OVERFLOW // SOLUTION NOT FOUND.',
-        '> MATH CANNOT COMPUTE.',
-        '> Open your eyes? (y/n)'
-      ]);
+      setLogs((prev) => {
+        if (prev.includes('> FATAL ERROR: OVERFLOW // SOLUTION NOT FOUND.')) return prev;
+        return [
+          ...prev,
+          '> FATAL ERROR: OVERFLOW // SOLUTION NOT FOUND.',
+          '> MATH CANNOT COMPUTE.',
+          '> Open your eyes? (y/n)'
+        ];
+      });
     }
   }, [level]);
 

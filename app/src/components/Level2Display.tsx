@@ -6,6 +6,7 @@ export function Level2Display() {
   const { levelStage, sigma, setSigma, userHabit, setLevelStage, setLevel } = useLaplaceStore();
   
   const [isGlitching, setIsGlitching] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
   const [minigameWon, setMinigameWon] = useState(false);
 
   // Failure timer
@@ -79,40 +80,56 @@ export function Level2Display() {
           transition: 'filter 2s ease'
         }} />
 
-        {!isGlitching && (
+        {!isGlitching && !showPopup && (
           <video 
+            key="video-clean"
             autoPlay 
             muted={false} 
             playsInline 
             className={styles.bg_video}
-            onEnded={() => setIsGlitching(true)}
-            style={{ position: 'absolute', inset: 0, mixBlendMode: 'normal' }}
+            onEnded={() => setShowPopup(true)}
+            style={{ position: 'absolute', inset: 0, zIndex: 1, mixBlendMode: 'normal' }}
           >
-            <source src="/preloads/level2/girl&boy(clean).mov" type="video/mp4" />
+            <source src="/preloads/level2/girl&boy(clean).webm" type="video/webm" />
           </video>
         )}
 
-        {isGlitching && !minigameWon && (
-          <>
+        {showPopup && (
+          <div style={{ position: 'absolute', zIndex: 100, inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.5)' }}>
             <audio autoPlay>
               <source src="/preloads/level2/10v2.wav" type="audio/wav" />
             </audio>
 
+            <div className={styles.instruction_popup} style={{ position: 'relative', top: 'auto', left: 'auto', transform: 'none' }}>
+              <h1>CRITICAL INSTABILITY</h1>
+              <p>The system is tearing itself apart. Slide the damping coefficient completely to the left (below -2) before the loop destroys you (15s).</p>
+              
+              <button 
+                className={styles.reboot_btn} 
+                style={{ marginTop: '2rem' }}
+                onClick={() => {
+                  setShowPopup(false);
+                  setIsGlitching(true);
+                }}
+              >
+                [ OK ]
+              </button>
+            </div>
+          </div>
+        )}
+
+        {isGlitching && !minigameWon && (
+          <>
             <video 
               autoPlay 
               loop
               muted={false} 
               playsInline 
               className={styles.bg_video}
-              style={{ position: 'absolute', inset: 0 }}
+              style={{ position: 'absolute', inset: 0, zIndex: 1 }}
             >
-              <source src="/preloads/level2/girl&boyGlitch.mov" type="video/mp4" />
+              <source src="/preloads/level2/girl&boyGlitch.mov" />
             </video>
-
-            <div className={styles.instruction_popup}>
-              <h1>CRITICAL INSTABILITY</h1>
-              <p>The system is tearing itself apart. Slide the damping coefficient completely to the left (below -2) before the loop destroys you (15s).</p>
-            </div>
 
             <div className={styles.damping_ui}>
               <label>SYSTEM NOISE DAMPING (REAL PART \sigma)</label>

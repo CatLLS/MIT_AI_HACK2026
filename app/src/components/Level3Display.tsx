@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
 import styles from './LevelDisplay.module.css';
 
@@ -15,6 +15,13 @@ export function Level3Display() {
     }
   };
 
+  // Force play if autoPlay attribute fails to catch
+  useEffect(() => {
+    if (levelStage === 'INTERACT' && videoRef.current) {
+      videoRef.current.play().catch((e) => console.log('Autoplay block:', e));
+    }
+  }, [levelStage]);
+
   if (levelStage === 'INTRO') {
      return (
        <div className={styles.transition_container}>
@@ -24,7 +31,7 @@ export function Level3Display() {
            playsInline className={styles.transition_video}
            onEnded={() => setLevelStage('INTERACT')}
          >
-           <source src="/preloads/level3/PianoIntro.mov" type="video/mp4" />
+           <source src="/preloads/level3/PianoIntro.mov" />
          </video>
        </div>
      );
@@ -34,12 +41,19 @@ export function Level3Display() {
     return (
       <div className={styles.layer_container}>
         <video 
+          key="l3-interact"
           ref={videoRef}
           className={styles.bg_video} 
           autoPlay 
           muted={false}
           playsInline
           onEnded={handleVideoEnded}
+          onTimeUpdate={(e) => {
+            const video = e.currentTarget;
+            if (video.duration && video.currentTime >= video.duration - 0.1 && !interactFinished) {
+              handleVideoEnded();
+            }
+          }}
         >
           <source src="/preloads/level3/level3Interact.mp4" type="video/mp4" />
         </video>
