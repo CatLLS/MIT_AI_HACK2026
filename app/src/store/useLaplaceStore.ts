@@ -26,7 +26,7 @@ interface LaplaceState {
   setLevelStage: (stage: LevelStage) => void;
   setSigma: (sigma: number) => void;
   setOmega: (omega: number) => void;
-  
+
   // Setters for inputs that map to coordinates
   setConstant: (val: string) => void;
   setHabit: (val: string) => void;
@@ -65,7 +65,7 @@ export const useLaplaceStore = create<LaplaceState>()(
       setLens: (lens) => {
         let newSigma = 0;
         let newOmega = 1.0;
-        
+
         // Logical choice shifts pole to left (stable), wait logic sets left-half plane
         if (lens === 'Logic') {
           newSigma = -2;
@@ -80,7 +80,7 @@ export const useLaplaceStore = create<LaplaceState>()(
           newSigma = -1;
           newOmega = 3.0; // intense frequency, but stable
         }
-        
+
         set({ userLens: lens, levelStage: 'INTRO', sigma: newSigma, omega: newOmega });
       },
       setFinalAnswer: (val) => set({ finalAnswer: val, level: 5, levelStage: 'CLI', sigma: 20, omega: 20 }), // Maximum instability
@@ -89,7 +89,7 @@ export const useLaplaceStore = create<LaplaceState>()(
     }),
     {
       name: 'laplace-storage', // name of the item in the storage (must be unique)
-      partialize: (state) => ({ 
+      partialize: (state) => ({
         // Only save config and user journey to local storage
         userConstant: state.userConstant,
         userHabit: state.userHabit,
