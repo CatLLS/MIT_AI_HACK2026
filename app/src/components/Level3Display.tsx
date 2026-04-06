@@ -60,7 +60,13 @@ export function Level3Display() {
 
         {interactFinished && (
           <>
-            <audio autoPlay>
+            <audio 
+              autoPlay 
+              onEnded={() => {
+                setLevel(4);
+                setLevelStage('CLI');
+              }}
+            >
               <source src="/preloads/level3/13v1.wav" type="audio/wav" />
             </audio>
 
@@ -73,17 +79,6 @@ export function Level3Display() {
                 onError={(e) => { e.currentTarget.src = `/preloads/level3/lens_${userLens.toLowerCase()}.png` }} // Fallback
               />
             )}
-
-            <button 
-              className={styles.reboot_btn} 
-              style={{ position: 'absolute', bottom: '10%' }}
-              onClick={() => {
-                setLevel(4);
-                setLevelStage('CLI');
-              }}
-            >
-              [ PROCEED ]
-            </button>
           </>
         )}
       </div>
