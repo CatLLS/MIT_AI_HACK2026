@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type LevelStage = 'LANDING' | 'TIME_DOMAIN_VIDEO' | 'CLI' | 'INTRO' | 'PRE_INTERACT' | 'INTERACT' | 'OUTRO' | 'DEATH';
+export type LevelStage = 'LANDING' | 'TIME_DOMAIN_VIDEO' | 'CLI' | 'INTRO' | 'PRE_INTERACT' | 'INTERACT' | 'OUTRO' | 'BREAKING' | 'MONTAGE' | 'DEATH';
 export type LensType = 'Sarcasm' | 'Logic' | 'Silence' | 'Work' | null;
 
 interface LaplaceState {
@@ -83,7 +83,7 @@ export const useLaplaceStore = create<LaplaceState>()(
 
         set({ userLens: lens, levelStage: 'INTRO', sigma: newSigma, omega: newOmega });
       },
-      setFinalAnswer: (val) => set({ finalAnswer: val, level: 5, levelStage: 'CLI', sigma: 20, omega: 20 }), // Maximum instability
+      setFinalAnswer: (val) => set({ finalAnswer: val, levelStage: 'BREAKING', sigma: 20, omega: 20 }), // Trigger visual breakdown
 
       resetExperience: () => set(initialState),
     }),
@@ -91,11 +91,11 @@ export const useLaplaceStore = create<LaplaceState>()(
       name: 'laplace-storage', // name of the item in the storage (must be unique)
       partialize: (state) => ({
         // Only save config and user journey to local storage
+        // NOTE: levelStage intentionally NOT persisted to avoid stale UI states after code changes
         userConstant: state.userConstant,
         userHabit: state.userHabit,
         userLens: state.userLens,
-        level: Math.max(0, state.level), // Don't persist beyond level climax?
-        levelStage: state.levelStage,
+        level: Math.max(0, state.level),
         sigma: state.sigma,
         omega: state.omega,
         useFallback: state.useFallback

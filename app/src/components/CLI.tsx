@@ -66,12 +66,12 @@ export function CLI() {
       });
     } else if (level === 5) {
       setLogs((prev) => {
-        if (prev.includes('> FATAL ERROR: OVERFLOW // SOLUTION NOT FOUND.')) return prev;
+        if (prev.includes('> FATAL ERROR: OVERFLOW // IDENTITY NOT FOUND.')) return prev;
         return [
           ...prev,
-          '> FATAL ERROR: OVERFLOW // SOLUTION NOT FOUND.',
-          '> MATH CANNOT COMPUTE.',
-          '> Open your eyes? (y/n)'
+          '> FATAL ERROR: OVERFLOW // IDENTITY NOT FOUND.',
+          '> Attempting Inverse Transform L⁻¹...',
+          '> Warning: Real-time signal contains non-linearities.',
         ];
       });
     }
@@ -138,6 +138,7 @@ export function CLI() {
           <div ref={bottomRef} />
         </div>
         
+        {/* Level 5 is audio-driven — no text input */}
         {level < 5 && (
           <form className={styles.input_line} onSubmit={handleSubmit}>
             <span className={styles.prompt}>{'>'}</span>

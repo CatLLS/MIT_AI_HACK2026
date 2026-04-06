@@ -1,0 +1,165 @@
+/* ===== BREAKDOWN OVERLAY ===== */
+
+.breakdown-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  pointer-events: none;
+  overflow: hidden;
+  background: #000;
+}
+
+/* ===== FORMULA SCROLL — breaks its container ===== */
+.formula-scroll {
+  position: absolute;
+  top: 10%;
+  left: -50%;
+  width: 300%;
+  padding: 0.4rem 0;
+  color: #9d00ff;
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  white-space: nowrap;
+  animation: scroll-formula 2s linear infinite;
+  z-index: 2;
+  text-shadow: 0 0 8px #9d00ff;
+  opacity: 0.8;
+}
+
+.formula-scroll-item {
+  display: inline;
+}
+
+/* Phase 1+: duplicate the formula at multiple heights, falling */
+.phase-1 .formula-scroll,
+.phase-2 .formula-scroll,
+.phase-3 .formula-scroll {
+  animation: scroll-formula 1s linear infinite, formula-fall 2s ease-in forwards;
+}
+
+/* ===== BLEEDING MATH SYMBOLS — purple only ===== */
+.bleeding-symbol {
+  position: absolute;
+  color: #9d00ff;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  text-shadow: 0 0 6px #9d00ff;
+  opacity: 0;
+  animation: symbol-snap-in 0.15s ease-out forwards;
+  z-index: 5;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Every 3rd symbol slightly different purple shade */
+.bleeding-symbol:nth-child(3n) {
+  color: #c77dff;
+  text-shadow: 0 0 6px #c77dff;
+}
+
+/* ===== ERROR TEXT — red ===== */
+.error-text {
+  position: absolute;
+  color: #ff003c;
+  font-family: 'Courier New', monospace;
+  font-weight: 900;
+  text-shadow: 0 0 10px #ff003c;
+  opacity: 0;
+  animation: symbol-snap-in 0.1s ease-out forwards;
+  z-index: 6;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ===== USER ANSWER — big, red, overwhelming ===== */
+.answer-bleed {
+  position: absolute;
+  color: #ff003c;
+  font-family: 'Courier New', monospace;
+  font-weight: 900;
+  text-shadow: 0 0 20px #ff003c, 0 0 60px rgba(255, 0, 60, 0.4);
+  opacity: 0;
+  animation: answer-slam 0.2s ease-out forwards;
+  z-index: 8;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+/* ===== SNAP GLITCH LAYER — snaps the underlying UI around ===== */
+.snap-glitch-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  animation: snap-chaos 0.3s step-end infinite;
+  pointer-events: none;
+}
+
+/* ===== BLACK OUT ===== */
+.breakdown-obscure {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  animation: hard-blackout 1.5s steps(8) forwards;
+  z-index: 100;
+}
+
+/* ============================
+   KEYFRAMES
+   ============================ */
+
+/* Formula scrolling */
+@keyframes scroll-formula {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-33%); }
+}
+
+/* Formula falling like letters breaking free */
+@keyframes formula-fall {
+  0%   { top: 10%; opacity: 0.8; }
+  40%  { top: 30%; opacity: 1; }
+  100% { top: 120%; opacity: 0; }
+}
+
+/* Symbols appear instantly — no fade, just SNAP */
+@keyframes symbol-snap-in {
+  0%   { opacity: 0; transform: scale(0.3); }
+  60%  { opacity: 1; transform: scale(1.3); }
+  100% { opacity: 0.9; transform: scale(1); }
+}
+
+/* User answer SLAMS onto screen */
+@keyframes answer-slam {
+  0%   { opacity: 0; transform: scale(3) rotate(0deg); }
+  50%  { opacity: 1; transform: scale(0.9) rotate(-2deg); }
+  100% { opacity: 0.85; transform: scale(1) rotate(0deg); }
+}
+
+/* Snap chaos — violent instant transforms on the background */
+@keyframes snap-chaos {
+  0%   { transform: rotate(0deg) scale(1) translate(0, 0); }
+  10%  { transform: rotate(180deg) scale(1.05) translate(-5vw, 3vh); }
+  20%  { transform: rotate(-90deg) scale(0.95) translate(8vw, -5vh); }
+  30%  { transform: rotate(45deg) scale(1.1) translate(-10vw, 10vh); }
+  40%  { transform: rotate(180deg) scale(1) translate(5vw, -8vh); }
+  50%  { transform: rotate(-180deg) scale(1.08) translate(-3vw, 5vh); }
+  60%  { transform: rotate(270deg) scale(0.9) translate(12vw, -3vh); }
+  70%  { transform: rotate(-45deg) scale(1.15) translate(-8vw, 8vh); }
+  80%  { transform: rotate(90deg) scale(1) translate(3vw, -12vh); }
+  90%  { transform: rotate(-135deg) scale(1.05) translate(-6vw, 6vh); }
+  100% { transform: rotate(0deg) scale(1) translate(0, 0); }
+}
+
+/* Hard blackout — not a smooth fade, but stuttery steps */
+@keyframes hard-blackout {
+  0%   { opacity: 0; }
+  20%  { opacity: 0.3; }
+  30%  { opacity: 0; }
+  50%  { opacity: 0.6; }
+  60%  { opacity: 0.2; }
+  80%  { opacity: 0.8; }
+  90%  { opacity: 0.5; }
+  100% { opacity: 1; }
+}

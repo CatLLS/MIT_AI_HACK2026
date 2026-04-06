@@ -4,51 +4,89 @@ import { CLI } from './components/CLI';
 import { LiveFormula } from './components/LiveFormula';
 import { LevelDisplay } from './components/LevelDisplay';
 import { Climax360 } from './components/Climax360';
+import { BreakdownOverlay } from './components/BreakdownOverlay';
+import { Level5AudioSequence } from './components/Level5AudioSequence';
 import './index.css';
 import { useEffect } from 'react';
 
 function App() {
-  const { level, levelStage, sigma } = useLaplaceStore();
+  const { level, levelStage, sigma, setLevel, setLevelStage } = useLaplaceStore();
 
-  // Dynamic stability effects based on sigma
+  // Safety guard: if level is 0, always ensure we're in a valid landing stage
+  useEffect(() => {
+    if (level === 0 && levelStage !== 'LANDING' && levelStage !== 'TIME_DOMAIN_VIDEO') {
+      setLevelStage('LANDING');
+    }
+  }, []); // Only on mount
+
+  // Dynamic stability effects based on sigma (only during normal gameplay, not during breakdown)
   useEffect(() => {
     const container = document.getElementById('app-container');
-    if (container) {
-      if (sigma > 0) {
-        // Unstable state: UI breakdown
-        container.style.animation = `glitch-shake ${1 / Math.max(sigma, 0.1)}s infinite`;
-        container.style.filter = `hue-rotate(${Math.min(sigma * 15, 360)}deg) blur(${Math.min(sigma, 10)}px)`;
-      } else {
-        // Stable
-        container.style.animation = 'none';
-        container.style.filter = 'none';
-      }
+    if (!container) return;
+
+    // During BREAKING, MONTAGE, or level 5+, forcefully clear all CSS effects
+    if (levelStage === 'MONTAGE' || level >= 5) {
+      container.classList.remove('app-breaking');
+      container.style.animation = 'none';
+      container.style.filter = 'none';
+      container.style.transform = 'none';
+      return;
     }
-  }, [sigma]);
+
+    if (levelStage === 'BREAKING') {
+      // No container effects — the BreakdownOverlay handles its own visuals
+      container.style.animation = 'none';
+      container.style.filter = 'none';
+      return;
+    }
+
+    container.classList.remove('app-breaking');
+    if (sigma > 0 && level < 5) {
+      container.style.animation = `glitch-shake ${1 / Math.max(sigma, 0.1)}s infinite`;
+      container.style.filter = `hue-rotate(${Math.min(sigma * 15, 360)}deg)`;
+    } else {
+      container.style.animation = 'none';
+      container.style.filter = 'none';
+    }
+  }, [sigma, levelStage, level]);
 
   return (
     <div id="app-container" className="unstable-container" style={{ width: '100%', height: '100%' }}>
+      {/* Level 0: always render when level === 0, regardless of levelStage */}
       {level === 0 && <Level0 />}
       
       {/* HUD overlays that persist across levels > 0 */}
       {levelStage === 'CLI' && <CLI />}
-      {level > 0 && levelStage !== 'CLI' && levelStage !== 'DEATH' && <LiveFormula />}
+      {level > 0 && levelStage !== 'CLI' && levelStage !== 'DEATH' && levelStage !== 'BREAKING' && levelStage !== 'MONTAGE' && <LiveFormula />}
 
-      {/* Background / Game Layers */}
+      {/* Background / Game Layers (levels 1-3) */}
       <LevelDisplay />
-      
-      {/* Fallback for Level 4+ before 360 view renders */}
-      {(level === 4 || level === 5) && (
-        <div style={{ position: 'absolute', inset: 0, zIndex: 0, background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
-          <h1>[ FATAL ERROR: OVERFLOW // SYSTEM UNABLE TO RESOLVE DOMAIN ]</h1>
-          {/* A montage video plays here. Assuming `overflow_montage.mp4` will be added to preloads/climax */}
-          <video autoPlay loop muted style={{ position: 'absolute', width: '100%', height: '100%', objectFit: 'cover', zIndex: -1, opacity: 0.3, mixBlendMode: 'screen' }}>
-            <source src="/preloads/climax/overflow_montage.mp4" type="video/mp4" />
+
+      {/* Level 4: visual chaos breakdown */}
+      {levelStage === 'BREAKING' && <BreakdownOverlay />}
+
+      {/* MONTAGE: fullscreen video before level 5 */}
+      {levelStage === 'MONTAGE' && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 8500, background: '#000' }}>
+          <video
+            autoPlay
+            playsInline
+            muted={false}
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            onEnded={() => {
+              setLevel(5);
+              setLevelStage('CLI');
+            }}
+          >
+            <source src="/preloads/climax/finaleMontage.mp4" type="video/mp4" />
           </video>
         </div>
       )}
 
-      {/* Level 6: 360 Climax */}
+      {/* Level 5: dim CLI + audio sequence */}
+      {level === 5 && levelStage === 'CLI' && <Level5AudioSequence />}
+
+      {/* Level 6: 360 Splat World */}
       {level === 6 && <Climax360 />}
     </div>
   );
