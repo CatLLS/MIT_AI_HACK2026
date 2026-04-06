@@ -1,81 +1,24 @@
-import { useRef, useMemo } from 'react';
-import { Canvas, useFrame, useLoader } from '@react-three/fiber';
-import { OrbitControls, Environment, Float, Text, MeshReflectorMaterial } from '@react-three/drei';
-import * as THREE from 'three';
+import { useEffect, useState } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { WalkControls } from './WalkControls';
+import { SplatMesh } from '@sparkjsdev/spark';
 import { useLaplaceStore } from '../store/useLaplaceStore';
 import styles from './Climax360.module.css';
 
-function ClimaxScene() {
-  const { userConstant, userHabit, userLens, finalAnswer } = useLaplaceStore();
-  const skyboxTexture = useLoader(THREE.TextureLoader, '/preloads/climax/skybox.jpg');
+function SplatScene({ url }: { url: string }) {
+  const [mesh, setMesh] = useState<any>(null);
 
-  // Rotate the entire group slowly
-  const groupRef = useRef<THREE.Group>(null);
-  useFrame((state, delta) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y -= delta * 0.05;
+  useEffect(() => {
+    try {
+      const splat = new SplatMesh({ url });
+      setMesh(splat);
+    } catch (e) {
+      console.error("Failed to load Splat Mesh:", e);
     }
-  });
+  }, [url]);
 
-  return (
-    <>
-      <OrbitControls makeDefault enableZoom={false} enablePan={false} rotateSpeed={0.5} />
-      
-      {/* 360 Skybox */}
-      <mesh>
-        <sphereGeometry args={[500, 60, 40]} />
-        <meshBasicMaterial map={skyboxTexture} side={THREE.BackSide} />
-      </mesh>
-
-      <ambientLight intensity={1} />
-      <directionalLight position={[10, 10, 5]} intensity={2} color="#9D00FF" />
-
-      <group ref={groupRef}>
-        {/* Floating Constat */}
-        {userConstant && (
-          <Float speed={2} rotationIntensity={1} floatIntensity={2} position={[-20, 5, -30]}>
-             <Text fontSize={4} color="#FF00F0" font="https://fonts.gstatic.com/s/firasans/v11/va9E4kDNxMZdWfMOD5Vvl4jO.ttf">{userConstant}</Text>
-          </Float>
-        )}
-
-        {/* Floating Habit */}
-        {userHabit && (
-          <Float speed={3} rotationIntensity={0.5} floatIntensity={1.5} position={[20, -5, -25]}>
-             <Text fontSize={3} color="#00FFFF" font="https://fonts.gstatic.com/s/firasans/v11/va9E4kDNxMZdWfMOD5Vvl4jO.ttf">{userHabit}</Text>
-          </Float>
-        )}
-
-        {/* Floating Lens */}
-        {userLens && (
-          <Float speed={1.5} rotationIntensity={2} floatIntensity={3} position={[0, 15, -40]}>
-             <Text fontSize={5} color="#9D00FF" font="https://fonts.gstatic.com/s/firasans/v11/va9E4kDNxMZdWfMOD5Vvl4jO.ttf">{`[ ${userLens} ]`}</Text>
-          </Float>
-        )}
-      </group>
-
-      {/* The Central Liquid Mirror */}
-      <Float speed={1.5} rotationIntensity={1} floatIntensity={1} position={[0, -2, -10]}>
-        <mesh>
-          <sphereGeometry args={[4, 64, 64]} />
-          <MeshReflectorMaterial
-            blur={[300, 100]}
-            resolution={1024}
-            mixBlur={1}
-            mixStrength={80}
-            roughness={0.1}
-            depthScale={1.2}
-            minDepthThreshold={0.4}
-            maxDepthThreshold={1.4}
-            color="#150030"
-            metalness={0.8}
-            mirror={1}
-          />
-        </mesh>
-      </Float>
-      
-      <Environment preset="night" />
-    </>
-  );
+  if (!mesh) return null;
+  return <primitive object={mesh} />;
 }
 
 export function Climax360() {
@@ -83,12 +26,20 @@ export function Climax360() {
 
   return (
     <div className={styles.canvas_container}>
-      <Canvas camera={{ position: [0, 0, 0.1], fov: 75 }}>
-        <ClimaxScene />
+      <div style={{ position: 'absolute', top: 20, left: 20, zIndex: 10, color: 'white', fontFamily: 'monospace', textShadow: '1px 1px 2px black', pointerEvents: 'none' }}>
+        DRAG TO LOOK AROUND<br/>
+        W A S D TO WALK<br/>
+        SPACE to ascend<br/>
+        Q to descend
+      </div>
+
+      <Canvas camera={{ position: [0, 1.5, 5], fov: 60 }}>
+        <WalkControls />
+        <SplatScene url="/preloads/climax/3dSplatWorld.spz" />
       </Canvas>
       
       {/* Delayed final text */}
-      <div className={styles.final_text_overlay} style={{ animationDelay: '5s' }}>
+      <div className={styles.final_text_overlay} style={{ animationDelay: '5s', pointerEvents: 'none' }}>
         IT WAS ME
         <div className={styles.subtext}>{finalAnswer}</div>
       </div>
