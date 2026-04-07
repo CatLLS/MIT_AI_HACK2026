@@ -6,12 +6,22 @@
   left: 0;
   z-index: 10;
   background-color: #000;
-  animation: fade-in 2s ease-out;
+  overflow: hidden;
 }
 
-@keyframes fade-in {
-  from { opacity: 0; zoom: 1.5; }
-  to { opacity: 1; zoom: 1; }
+.hud_instructions {
+  position: absolute; 
+  top: 20px; 
+  left: 20px; 
+  z-index: 100;
+  color: #fff; 
+  font-family: var(--font-mono);
+  text-shadow: 1px 1px 2px #000; 
+  pointer-events: none;
+  font-size: 0.85rem; 
+  line-height: 1.6; 
+  opacity: 0.6;
+  transition: opacity 0.5s ease-in-out;
 }
 
 .final_text_overlay {
@@ -24,12 +34,10 @@
   font-size: 5rem;
   letter-spacing: 1rem;
   text-transform: uppercase;
-  z-index: 20;
+  z-index: 200;
   pointer-events: none;
-  opacity: 0;
-  animation: slow-fade 4s ease-in forwards;
+  animation: message-reveal 5s ease-in-out forwards;
   text-shadow: 0 0 20px rgba(157, 0, 255, 0.8), 0 0 40px #fff;
-  mix-blend-mode: screen;
   text-align: center;
 }
 
@@ -37,11 +45,46 @@
   font-size: 1.5rem;
   letter-spacing: 0.5rem;
   margin-top: 1rem;
-  color: var(--color-primary);
+  color: #ff003c; /* Red as requested for the player's truth */
   font-family: var(--font-mono);
+  font-weight: bold;
 }
 
-@keyframes slow-fade {
-  from { opacity: 0; filter: blur(20px); }
-  to { opacity: 1; filter: blur(0); }
+@keyframes message-reveal {
+  0%   { opacity: 0; filter: blur(20px); transform: translate(-50%, -50%) scale(1.2); }
+  20%  { opacity: 1; filter: blur(0);    transform: translate(-50%, -50%) scale(1); }
+  80%  { opacity: 1; filter: blur(0);    transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; filter: blur(20px); transform: translate(-50%, -50%) scale(0.8); }
+}
+
+/* Credits Section */
+.credits_container {
+  position: absolute;
+  inset: 0;
+  z-index: 300;
+  background-color: transparent;
+  display: flex;
+  justify-content: flex-end; /* Right side as usually seen in games */
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.credits_scroller {
+  padding: 100vh 50px 100px 0; /* Moved 10px left as requested */
+  width: 400px;
+  animation: credits-roll 60s linear forwards;
+}
+
+.credits_line {
+  color: #c77dff;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  white-space: pre;
+  text-shadow: 0 0 5px rgba(157, 0, 255, 0.5);
+}
+
+@keyframes credits-roll {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-120%); } /* Sufficient to roll through text */
 }

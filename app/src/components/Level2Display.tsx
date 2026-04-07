@@ -69,11 +69,11 @@ export function Level2Display() {
   if (levelStage === 'INTERACT') {
     return (
       <div className={styles.layer_container}>
-        {/* Background driven by habit */}
+        {/* Background driven by signal choice (Habits, Connections, Convolution, Soul) */}
         <div style={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: `url(/preloads/level2/${userHabit?.toLowerCase()}_bg.jpg)`,
+          backgroundImage: `url(/preloads/level2/sky${userHabit === 'Convolution' ? 'Convoluted' : userHabit}.png)`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           filter: minigameWon ? 'grayscale(100%) brightness(0.7)' : 'none',

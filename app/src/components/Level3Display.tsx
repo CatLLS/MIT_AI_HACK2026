@@ -72,11 +72,9 @@ export function Level3Display() {
 
             {userLens && (
               <img 
-                src={`/preloads/level3/lens_${userLens.toLowerCase()}_image.png`} 
-                className={styles.lens_reflection}
+                src={`/preloads/level3/girl${userLens === 'Sarcasm' ? 'Sarcasmo' : userLens}.png`} 
+                className={styles.lens_reflection_fade}
                 alt={userLens} 
-                style={{ mixBlendMode: 'overlay', opacity: 0.8 }}
-                onError={(e) => { e.currentTarget.src = `/preloads/level3/lens_${userLens.toLowerCase()}.png` }} // Fallback
               />
             )}
           </>

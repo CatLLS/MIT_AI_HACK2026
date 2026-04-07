@@ -2,7 +2,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-export function WalkControls() {
+export function WalkControls({ enabled = true }: { enabled?: boolean }) {
   const { camera, gl } = useThree();
   const keys = useRef<{ [key: string]: boolean }>({});
   const isDragging = useRef(false);
@@ -16,6 +16,11 @@ export function WalkControls() {
   }, [camera]);
   
   useEffect(() => {
+    if (!enabled) {
+      isDragging.current = false;
+      return;
+    }
+
     // Keyboard listeners
     const handleKeyDown = (e: KeyboardEvent) => { keys.current[e.key.toLowerCase()] = true; };
     const handleKeyUp = (e: KeyboardEvent) => { keys.current[e.key.toLowerCase()] = false; };
@@ -50,10 +55,12 @@ export function WalkControls() {
       window.removeEventListener('mouseup', handleMouseUp);
       window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [camera, gl]);
+  }, [camera, gl, enabled]);
 
   useFrame((_, delta) => {
-    const speed = 10 * delta;
+    if (!enabled) return;
+
+    const speed = 2.5 * delta;
     
     const direction = new THREE.Vector3();
     const right = new THREE.Vector3();

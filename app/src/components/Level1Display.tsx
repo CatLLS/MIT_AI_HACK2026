@@ -118,20 +118,19 @@ export function Level1Display() {
             onClick={() => setClickedConstant(true)}
             style={{ 
               zIndex: 1,
-              // When clicked, we keep the image in the center, acting as a layer over the video
               pointerEvents: clickedConstant ? 'none' : 'auto',
               top: '50%',
               left: '50%',
-              right: 'auto', // overrides .constant_orb default
+              right: 'auto',
               transform: clickedConstant ? 'translate(-50%, -50%) scale(1.5)' : 'translate(-50%, -50%) scale(1)',
               transition: 'transform 2s ease'
             }}
           >
-            {/* The preloaded generated image */}
+            {/* The preloaded generated image from choices (Nostalgia, Longing, Logic, insanity) */}
             <img 
-              src={`/preloads/level1/${userConstant.toLowerCase()}_image.png`} 
+              src={`/preloads/level1/${userConstant.toLowerCase()}Point.png`} 
               alt={userConstant} 
-              onError={(e) => { e.currentTarget.src = "/preloads/level1/constant_item.png" }} 
+              onError={(e) => { e.currentTarget.src = "/preloads/level1/nostalgiaPoint.png" }} 
             />
             {!clickedConstant && <span className={styles.orb_label}>{userConstant}</span>}
           </div>

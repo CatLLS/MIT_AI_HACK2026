@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
+import type { LensType } from '../store/useLaplaceStore';
 import styles from './CLI.module.css';
 
 export function CLI() {
@@ -29,8 +30,12 @@ export function CLI() {
         `> System Status: MARGINALLY STABLE (sigma: ${sigma.toFixed(1)})`,
         '> Complexity Level: 1 (Linear Initialization)',
         '> To stabilize the singularity, identify the Constant.',
-        '> What is the one thing in your life that never changes, no matter the time?',
-        '> [Options: Bread, Coffee, Sky]'
+        "> If you were a single point in infinity, What is the one thing in your life that stays at $t = \infty$?",
+        '1: The ghost of a memory that feels more real than the present. [Nostalgia]',
+        '2: The curiosity about what happens on the very last page I’ll never read. [Longing]',
+        '3: The cold comfort of knowing that 1 + 1 will always equal 2. [Logic]',
+        '4: The laughter of a mind finally set free from its own boundaries. [insanity]',
+        '(Insert an option from 1 to 4):_'
       ]);
     } else if (level === 2) {
       setLogs((prev) => {
@@ -39,8 +44,12 @@ export function CLI() {
           ...prev,
           '> Constant Locked. System processing...',
           '> Complexity Level: 2 (Linear Oscillation)',
-          '> Signals repeat. What is a habit or a memory that keeps oscillating in your mind, refusing to decay?',
-          '> [Options: Rain, Traffic, Wind]'
+          '> Signals repeat. What is the rhythm you find yourself returning to?',
+          '1: The comfort of a path so worn that your feet move without your mind. [Habits]',
+          '2: The warmth of a conversation where you don\'t have to explain who you are. [Connections]',
+          '3: The static of a thousand "what-ifs" overlapping until you can\'t hear your own voice. [Convolution]',
+          '4: The internal hum that stays constant even when the world outside goes completely silent. [Soul]',
+          '(Insert an option from 1 to 4):_'
         ];
       });
     } else if (level === 3) {
@@ -50,8 +59,12 @@ export function CLI() {
           ...prev,
           '> Loop identified. Resonance detected...',
           '> Multiple solutions found. To stabilize the output, identify your Filter.',
-          '> What is the lens you use to protect yourself from the noise?',
-          '> [Options: Sarcasm, Logic, Silence, Work]'
+          '> How do you process the data?',
+          '1: Seeing the world as a joke told to a captive audience. [Sarcasm]',
+          '2: Analyzing the grain of the wood to ignore the size of the room. [Logic]',
+          '3: Moving so fast that the scenery can\'t catch up to the soul. [Velocity]',
+          '4: Turning the volume down until the chaos becomes a soft hum. [Damping]',
+          '(Insert an option from 1 to 4):_'
         ];
       });
     } else if (level === 4) {
@@ -75,55 +88,66 @@ export function CLI() {
         ];
       });
     }
-  }, [level]);
+  }, [level, sigma]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
 
-    const normalized = inputValue.trim().toLowerCase();
+    const val = inputValue.trim();
     
-    // Check required options based on level
     if (level === 1) {
-      if (!['bread', 'coffee', 'sky'].includes(normalized)) {
-        setLogs((prev) => [...prev, `> ${inputValue}`, '[ERROR] Invalid Constant. Choose: Bread, Coffee, Sky']);
-        setInputValue('');
-        return;
-      }
-      setLogs((prev) => [...prev, `> ${inputValue}`]);
-      setConstant(normalized.charAt(0).toUpperCase() + normalized.slice(1));
-    } else if (level === 2) {
-      if (!['rain', 'traffic', 'wind'].includes(normalized)) {
-        setLogs((prev) => [...prev, `> ${inputValue}`, '[ERROR] Invalid Habit. Choose: Rain, Traffic, Wind']);
-        setInputValue('');
-        return;
-      }
-      setLogs((prev) => [...prev, `> ${inputValue}`]);
-      setHabit(normalized.charAt(0).toUpperCase() + normalized.slice(1));
-    } else if (level === 3) {
-      if (['sarcasm', 'logic', 'silence', 'work'].includes(normalized)) {
-        const lensLiteral = normalized.charAt(0).toUpperCase() + normalized.slice(1) as 'Sarcasm' | 'Logic' | 'Silence' | 'Work';
-        setLogs((prev) => [...prev, `> ${inputValue}`]);
-        setLens(lensLiteral);
+      const mapping: Record<string, string> = {
+        '1': 'Nostalgia',
+        '2': 'Longing',
+        '3': 'Logic',
+        '4': 'insanity'
+      };
+      if (!mapping[val]) {
+        setLogs((prev) => [...prev, `> ${inputValue}`, '[ERROR] Invalid choice. Choose 1, 2, 3, or 4.']);
       } else {
-        setLogs((prev) => [...prev, `> ${inputValue}`, '[ERROR] Invalid Lens. Choose: Sarcasm, Logic, Silence, Work']);
-        setInputValue('');
-        return;
+        setLogs((prev) => [...prev, `> ${inputValue}`, `> Constant identified: [${mapping[val]}]`]);
+        setConstant(mapping[val]);
+      }
+    } else if (level === 2) {
+      const mapping: Record<string, string> = {
+        '1': 'Habits',
+        '2': 'Connections',
+        '3': 'Convolution',
+        '4': 'Soul'
+      };
+      if (!mapping[val]) {
+        setLogs((prev) => [...prev, `> ${inputValue}`, '[ERROR] Invalid choice. Choose 1, 2, 3, or 4.']);
+      } else {
+        setLogs((prev) => [...prev, `> ${inputValue}`, `> Signal identified: [${mapping[val]}]`]);
+        setHabit(mapping[val]);
+      }
+    } else if (level === 3) {
+      const mapping: Record<string, LensType> = {
+        '1': 'Sarcasm',
+        '2': 'Logic',
+        '3': 'Velocity',
+        '4': 'Damping'
+      };
+      if (!mapping[val]) {
+        setLogs((prev) => [...prev, `> ${inputValue}`, '[ERROR] Invalid choice. Choose 1, 2, 3, or 4.']);
+      } else {
+        setLogs((prev) => [...prev, `> ${inputValue}`, `> Filter identified: [${mapping[val]}]`]);
+        setLens(mapping[val]);
       }
     } else if (level === 4) {
       setLogs((prev) => [...prev, `> ${inputValue}`]);
-      setFinalAnswer(inputValue);
+      setFinalAnswer(val);
     } else if (level === 5) {
       setLogs((prev) => [...prev, `> ${inputValue}`]);
-      if (normalized === 'y') {
-        useLaplaceStore.getState().setLevel(6); // Trigger 360 climax
+      if (val.toLowerCase() === 'y') {
+        useLaplaceStore.getState().setLevel(6); 
       }
     }
 
     setInputValue('');
   };
 
-  // If level 0 or >=6, or not in CLI stage, it is hidden
   if (level === 0 || level > 5 || useLaplaceStore.getState().levelStage !== 'CLI') return null;
 
   return (
@@ -138,7 +162,6 @@ export function CLI() {
           <div ref={bottomRef} />
         </div>
         
-        {/* Level 5 is audio-driven — no text input */}
         {level < 5 && (
           <form className={styles.input_line} onSubmit={handleSubmit}>
             <span className={styles.prompt}>{'>'}</span>
@@ -148,7 +171,7 @@ export function CLI() {
               className={styles.input}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Awaiting input..."
+              placeholder="Awaiting choice..."
             />
             <span className={styles.cursor}></span>
           </form>

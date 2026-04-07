@@ -1,0 +1,7 @@
+-fix credits positioning(it is still cropped, let's just center it instead, and increase the time until it starts playing, also, make sure the credits keep rolling until they are fully out of the screen,
+(also, add MITHack logo(at preloads/MITHack) at the end of the credits, before "THE END") also, at the end of the credits, add a line saying "THE END" and then fade to black.)
+-on ending, remove it was me audio and visual.
+- make the letters in the cli typewriter effect appear one by one, not all at once.(but quickly, like 0.1 seconds between each letter)
+- add crt effect to the whole game, except 3d splat scenes.
+- make the poles minigame from level 2 harder, make each X move toward the dangerous zone at a different speed, and they keep trying to get to the dangerous zone, 
+so the player has to keep pulling them back to the safe zone,it ends after 15 seconds. Update the tutorial pop up to match the new minigame.

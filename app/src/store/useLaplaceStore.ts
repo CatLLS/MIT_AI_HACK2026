@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 export type LevelStage = 'LANDING' | 'TIME_DOMAIN_VIDEO' | 'CLI' | 'INTRO' | 'PRE_INTERACT' | 'INTERACT' | 'OUTRO' | 'BREAKING' | 'MONTAGE' | 'DEATH';
-export type LensType = 'Sarcasm' | 'Logic' | 'Silence' | 'Work' | null;
+export type LensType = 'Sarcasm' | 'Logic' | 'Velocity' | 'Damping' | null;
 
 interface LaplaceState {
   // Application config
@@ -66,19 +66,17 @@ export const useLaplaceStore = create<LaplaceState>()(
         let newSigma = 0;
         let newOmega = 1.0;
 
-        // Logical choice shifts pole to left (stable), wait logic sets left-half plane
         if (lens === 'Logic') {
           newSigma = -2;
         } else if (lens === 'Sarcasm') {
-          // Sarcasm pushes it to right half plane (unstable)
           newSigma = 2;
-          newOmega = 2.0; // Faster vibration
-        } else if (lens === 'Silence') {
-          newSigma = -0.5;
-          newOmega = 0.1; // low vibration
-        } else if (lens === 'Work') {
+          newOmega = 2.0;
+        } else if (lens === 'Velocity') {
           newSigma = -1;
-          newOmega = 3.0; // intense frequency, but stable
+          newOmega = 4.0;
+        } else if (lens === 'Damping') {
+          newSigma = -1.5;
+          newOmega = 0.5;
         }
 
         set({ userLens: lens, levelStage: 'INTRO', sigma: newSigma, omega: newOmega });
@@ -91,7 +89,6 @@ export const useLaplaceStore = create<LaplaceState>()(
       name: 'laplace-storage', // name of the item in the storage (must be unique)
       partialize: (state) => ({
         // Only save config and user journey to local storage
-        // NOTE: levelStage intentionally NOT persisted to avoid stale UI states after code changes
         userConstant: state.userConstant,
         userHabit: state.userHabit,
         userLens: state.userLens,

@@ -236,3 +236,19 @@
   font-size: 0.9rem;
   line-height: 1.5;
 }
+
+.lens_reflection_fade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 10;
+  pointer-events: none;
+  animation: slow-fade-in 2s ease-in forwards;
+}
+
+@keyframes slow-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
