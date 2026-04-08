@@ -125,16 +125,12 @@
 
 /* Symbols appear instantly — no fade, just SNAP */
 @keyframes symbol-snap-in {
-  0%   { opacity: 0; transform: scale(0.3); }
-  60%  { opacity: 1; transform: scale(1.3); }
-  100% { opacity: 0.9; transform: scale(1); }
+  0%, 100% { opacity: 0.9; transform: none; }
 }
 
 /* User answer SLAMS onto screen */
 @keyframes answer-slam {
-  0%   { opacity: 0; transform: scale(3) rotate(0deg); }
-  50%  { opacity: 1; transform: scale(0.9) rotate(-2deg); }
-  100% { opacity: 0.85; transform: scale(1) rotate(0deg); }
+  0%, 100% { opacity: 0.85; transform: none; }
 }
 
 /* Snap chaos — violent instant transforms on the background */

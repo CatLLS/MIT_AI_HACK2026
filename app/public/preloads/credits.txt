@@ -1,38 +1,38 @@
-________________________________________________________________________________
---------------------------------------------------------------------------------
-                         A CATLLS EXPERIENCE
---------------------------------------------------------------------------------
-________________________________________________________________________________
+_______________________________________________________________
+---------------------------------------------------------------
+                     A CATLLS EXPERIENCE
+---------------------------------------------------------------
+_______________________________________________________________
  
  [ SYSTEM ] : INITIALIZING END-OF-FILE (EOF) SEQUENCE...
  [ STATUS ] : MISSION COMPLETE
  [ TARGET ] : MIT AI FILM HACKATHON 2026
-________________________________________________________________________________
+_______________________________________________________________
  
- > EXECUTABLE BY .......................... Catarina Silva e Meirelles (catlls)
+ > EXECUTABLE BY .......... Catarina Silva e Meirelles (catlls)
  
- ---[ DEVELOPMENT & ARCHITECTURE ]---
+           ---[ DEVELOPMENT & ARCHITECTURE ]---
  
- > LEAD CODING ........................................... Antigravity & catlls
- > VISUAL GENERATION ............................................ PixVerse & Me
- > CINEMATOGRAPHY .................................... 50% Flick | 50% HailuoAI
- > 3D WORLD GENERATION ............................................... Open Art
+ > LEAD CODING ........................... Antigravity & catlls
+ > VISUAL GENERATION ............................ PixVerse & Me
+ > CINEMATOGRAPHY ..................... 50% Flick | 50% HailuoAI
+ > 3D WORLD GENERATION ............................... Open Art
  
- ---[ AUDIO DATASET (via PIXABAY/FREESOUND) ]---
+           ---[ AUDIO DATASET (via PIXABAY) ]---
  
- > "Click Click 2" .................................................... SinusPi
- > "Deep and Cinematic Woosh" .............................. [ AI GENERATED ]
- > "4 Min Fan Buzz Sound" .......................................... TanwerAman
- > "Atmospheric Piano & Violin Music 01" ............... freesound_community
- > "Mountain Wind" ............................................... CreatorsHome
- > "High Pitched Tone" ..................................... freesound_community
- > "Large Underwater Explosion" ............................ DavidDumaisAudio
- > "Light Trails" .................................................. Spencer_YK
+ > "Click Click 2" ..................................... SinusPi
+ > "Deep and Cinematic Woosh" ................. [ AI GENERATED ]
+ > "4 Min Fan Buzz Sound" ........................... TanwerAman
+ > "Atmospheric Piano & Violin Music 01" .... freesound_community
+ > "Mountain Wind" ................................. CreatorsHome
+ > "High Pitched Tone" ...................... freesound_community
+ > "Large Underwater Explosion" ................ DavidDumaisAudio
+ > "Light Trails" .................................... Spencer_YK
  
-________________________________________________________________________________
+_______________________________________________________________
  
  [ LOG ] : PROCESSED AT 100%
- [ INFO ] : THANK YOU FOR WATCHING
+ [ INFO ] : THANK YOU FOR WATCHING! ₍^. .^₎⟆
  [ EOF ]
  
-________________________________________________________________________________
+_______________________________________________________________

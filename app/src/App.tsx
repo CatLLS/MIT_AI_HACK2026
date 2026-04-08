@@ -7,11 +7,14 @@ import { Climax360 } from './components/Climax360';
 import { BreakdownOverlay } from './components/BreakdownOverlay';
 import { Level5AudioSequence } from './components/Level5AudioSequence';
 import { CRTOverlay } from './components/CRTOverlay';
+import { LoadingScreen } from './components/LoadingScreen';
+import { useAssetPreloader } from './hooks/useAssetPreloader';
 import './index.css';
 import { useEffect } from 'react';
 
 function App() {
   const { level, levelStage, sigma, setLevel, setLevelStage } = useLaplaceStore();
+  const { progress, isLoaded } = useAssetPreloader();
 
   // Safety guard: if level is 0, always ensure we're in a valid landing stage
   useEffect(() => {
@@ -53,6 +56,8 @@ function App() {
 
   return (
     <div id="app-container" className="unstable-container" style={{ width: '100%', height: '100%' }}>
+      {!isLoaded && <LoadingScreen progress={progress} />}
+      
       {/* Level 1-5 CRT Overlay (Hidden in Climax and 360 Panorama for clarity) */}
       {level < 5 && <CRTOverlay />}
 

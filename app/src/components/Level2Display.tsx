@@ -32,7 +32,7 @@ export function Level2Display() {
         });
 
         // Fail if sigma goes too far right
-        if (useLaplaceStore.getState().sigma > 4.8) {
+        if (useLaplaceStore.getState().sigma > 4.6) {
           setLevelStage('DEATH');
         }
       }, 1000);
@@ -47,7 +47,7 @@ export function Level2Display() {
       const drift = () => {
         // System pulls sigma towards the right (unstable)
         // Complexity increases as time runs out
-        const intensity = 0.01 + (15 - timer) * 0.002; 
+        const intensity = (0.01 + (15 - timer) * 0.002) * 1.25; 
         setSigma(useLaplaceStore.getState().sigma + intensity);
 
         // Individual visual wobbles
@@ -132,7 +132,7 @@ export function Level2Display() {
 
             <div className={styles.instruction_popup} style={{ position: 'relative', top: 'auto', left: 'auto', transform: 'none' }}>
               <h1>SYSTEM OVERLOAD</h1>
-              <p>The system is oscillating out of control. The poles are drifting toward the danger zone (+4.8). FIGHT THE DRIFT by holding the slider to the left. SURVIVE FOR 15 SECONDS.</p>
+              <p>The system is oscillating out of control. The poles are drifting toward the danger zone (+4.6). FIGHT THE DRIFT by holding the slider to the left. SURVIVE FOR 15 SECONDS.</p>
               
               <button 
                 className={styles.reboot_btn} 

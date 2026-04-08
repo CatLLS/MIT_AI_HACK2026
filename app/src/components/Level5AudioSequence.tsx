@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
 import { PanoramaView } from './PanoramaView';
+import styles from './Climax360.module.css';
 
 type AudioPhase = 'audio14' | 'audio16' | 'audio17' | 'prompt';
 
@@ -18,6 +19,10 @@ export function Level5AudioSequence() {
 
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>
+      <div className={styles.hud_instructions} style={{ zIndex: 7000, pointerEvents: 'none' }}>
+        DRAG TO LOOK AROUND
+      </div>
+
       {/* 360 Panorama Background */}
       <PanoramaView />
 
