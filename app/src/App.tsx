@@ -6,6 +6,7 @@ import { LevelDisplay } from './components/LevelDisplay';
 import { Climax360 } from './components/Climax360';
 import { BreakdownOverlay } from './components/BreakdownOverlay';
 import { Level5AudioSequence } from './components/Level5AudioSequence';
+import { CRTOverlay } from './components/CRTOverlay';
 import './index.css';
 import { useEffect } from 'react';
 
@@ -25,7 +26,7 @@ function App() {
     if (!container) return;
 
     // During BREAKING, MONTAGE, or level 5+, forcefully clear all CSS effects
-    if (levelStage === 'MONTAGE' || level >= 5) {
+    if (levelStage === 'MONTAGE' || levelStage === 'PANORAMA' || level >= 5) {
       container.classList.remove('app-breaking');
       container.style.animation = 'none';
       container.style.filter = 'none';
@@ -52,12 +53,15 @@ function App() {
 
   return (
     <div id="app-container" className="unstable-container" style={{ width: '100%', height: '100%' }}>
+      {/* Level 1-5 CRT Overlay (Hidden in Climax and 360 Panorama for clarity) */}
+      {level < 5 && <CRTOverlay />}
+
       {/* Level 0: always render when level === 0, regardless of levelStage */}
       {level === 0 && <Level0 />}
       
       {/* HUD overlays that persist across levels > 0 */}
       {levelStage === 'CLI' && <CLI />}
-      {level > 0 && levelStage !== 'CLI' && levelStage !== 'DEATH' && levelStage !== 'BREAKING' && levelStage !== 'MONTAGE' && <LiveFormula />}
+      {level > 0 && levelStage !== 'CLI' && levelStage !== 'DEATH' && levelStage !== 'BREAKING' && levelStage !== 'MONTAGE' && levelStage !== 'PANORAMA' && <LiveFormula />}
 
       {/* Background / Game Layers (levels 1-3) */}
       <LevelDisplay />
@@ -83,8 +87,8 @@ function App() {
         </div>
       )}
 
-      {/* Level 5: dim CLI + audio sequence */}
-      {level === 5 && levelStage === 'CLI' && <Level5AudioSequence />}
+      {/* Level 5: 360 Panorama Sequence (starts after CLI finishes) */}
+      {level === 5 && levelStage === 'PANORAMA' && <Level5AudioSequence />}
 
       {/* Level 6: 360 Splat World */}
       {level === 6 && <Climax360 />}

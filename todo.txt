@@ -1,7 +1,11 @@
--fix credits positioning(it is still cropped, let's just center it instead, and increase the time until it starts playing, also, make sure the credits keep rolling until they are fully out of the screen,
-(also, add MITHack logo(at preloads/MITHack) at the end of the credits, before "THE END") also, at the end of the credits, add a line saying "THE END" and then fade to black.)
--on ending, remove it was me audio and visual.
-- make the letters in the cli typewriter effect appear one by one, not all at once.(but quickly, like 0.1 seconds between each letter)
-- add crt effect to the whole game, except 3d splat scenes.
-- make the poles minigame from level 2 harder, make each X move toward the dangerous zone at a different speed, and they keep trying to get to the dangerous zone, 
-so the player has to keep pulling them back to the safe zone,it ends after 15 seconds. Update the tutorial pop up to match the new minigame.
+- make the poles game a little bit easier, the poles should move slower, and the dangerous zone should be a little bit smaller.
+- something weird going on with the audio(voiceline) after you click open your eyes, it sounds robotic and distorted. When I reload the page, no problem, only when I go there by clicking "open your eyes" button.
+-Add black see through overlay when the credits are rolling. (like a fade to black, but not fully black, just enough to see the credits clearly)
+
+Make scene after finalMontage be, instead of just audio over the CLI, while playing the audio, show 
+the "360World" a 360 Panorama, where you should be able to drag the mouse to look around. During this scene, audios 14v1, 16v1, up until 17v1. 
+When 17v1 finishes, the open your eyes button should appear as an overlay to the 360 world, and audio 18v1 should play. The rest, from clicking to the button onward remains the same
+> FATAL ERROR: OVERFLOW // IDENTITY NOT FOUND.
+> Attempting Inverse Transform L⁻¹...
+> Warning: Real-time signal contains non-linearities.
+->this CLI could be an overlay to the 360 as well

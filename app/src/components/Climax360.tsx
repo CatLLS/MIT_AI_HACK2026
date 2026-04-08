@@ -32,17 +32,12 @@ function CinematicScene({ onLanded }: { onLanded: () => void }) {
   }, [camera]);
 
   useFrame((_, delta) => {
-    // 1. Spark Sorting
     if (sparkRef.current) {
       sparkRef.current.update({ scene, viewToWorld: camera.matrixWorld });
     }
 
-    // 2. Falling Animation
     if (!landed) {
-      // Smooth fall to target Y
       camera.position.y = THREE.MathUtils.lerp(camera.position.y, TARGET_POS.y, 1.5 * delta);
-      
-      // If close enough, snap and unlock
       if (Math.abs(camera.position.y - TARGET_POS.y) < 0.01) {
         camera.position.y = TARGET_POS.y;
         setLanded(true);
@@ -64,8 +59,7 @@ function CinematicScene({ onLanded }: { onLanded: () => void }) {
 }
 
 export function Climax360() {
-  const { finalAnswer } = useLaplaceStore();
-  const [stage, setStage] = useState<'falling' | 'message' | 'credits'>('falling');
+  const [stage, setStage] = useState<'falling' | 'atmosphere' | 'credits' | 'finished'>('falling');
   const [creditsText, setCreditsText] = useState("");
   const musicRef = useRef<HTMLAudioElement>(null);
 
@@ -77,26 +71,36 @@ export function Climax360() {
       .catch(() => setCreditsText("..."));
   }, []);
 
-  // Initial enter audio (19v1)
+  // Initial enter audio (19v1) - Falling atmospheric cue
   useEffect(() => {
     const audio = new Audio('/preloads/19v1.wav');
     audio.play().catch(() => {});
+    return () => {
+      audio.pause();
+      audio.currentTime = 0;
+    };
   }, []);
 
   // Progression Lifecycle
   useEffect(() => {
-    if (stage === 'message') {
-      // Play "itWasMe" voice line
-      const voice = new Audio('/preloads/itWasMe.wav');
-      voice.play().catch(() => {});
-
+    if (stage === 'atmosphere') {
+      // Long atmospheric pause after landing (15 seconds) before credits start
       const timer = setTimeout(() => {
         setStage('credits');
         if (musicRef.current) {
-          musicRef.current.volume = 0.5; // Cut volume by half
+          musicRef.current.volume = 0.5; // Half volume as requested
           musicRef.current.play().catch(e => console.log("Music play blocked", e));
         }
-      }, 10000); // 10 seconds as requested
+      }, 15000); 
+
+      return () => clearTimeout(timer);
+    }
+
+    if (stage === 'credits') {
+      // Logic to trigger the final "THE END" after the credits scroller duration (approx 60s)
+      const timer = setTimeout(() => {
+        setStage('finished');
+      }, 65000);
       return () => clearTimeout(timer);
     }
   }, [stage]);
@@ -121,19 +125,11 @@ export function Climax360() {
         gl={{ antialias: false }}
         dpr={[1, 2]}
       >
-        <WalkControls enabled={stage !== 'falling'} />
-        <CinematicScene onLanded={() => setStage('message')} />
+        <WalkControls enabled={true} />
+        <CinematicScene onLanded={() => setStage('atmosphere')} />
         <ambientLight intensity={0.5} />
       </Canvas>
       
-      {/* "IT WAS ME" Overlay */}
-      {stage === 'message' && (
-        <div className={styles.final_text_overlay}>
-          IT WAS ME
-          <div className={styles.subtext}>{finalAnswer}</div>
-        </div>
-      )}
-
       {/* Credits Roll */}
       {stage === 'credits' && (
         <div className={styles.credits_container}>
@@ -143,7 +139,17 @@ export function Climax360() {
                 {line || "\u00A0"}
               </div>
             ))}
+            
+            {/* Logo at the end of scroll */}
+            <img src="/preloads/MITHack.webp" className={styles.mithack_logo} alt="MIT Hack" />
           </div>
+        </div>
+      )}
+
+      {/* Final "THE END" and Blackout */}
+      {stage === 'finished' && (
+        <div className={styles.the_end_overlay}>
+          <div className={styles.the_end_text}>THE END</div>
         </div>
       )}
     </div>

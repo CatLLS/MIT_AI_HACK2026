@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
 import styles from './LevelDisplay.module.css';
 
@@ -6,32 +6,60 @@ export function Level2Display() {
   const { levelStage, sigma, setSigma, userHabit, setLevelStage, setLevel } = useLaplaceStore();
   
   const [isGlitching, setIsGlitching] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
+  const [showPopup, setShowPopup] = useState(useLaplaceStore.getState().minigameSave);
   const [minigameWon, setMinigameWon] = useState(false);
+  const [timer, setTimer] = useState(15);
+  
+  // Independent visual drifts for the "poles"
+  const [drift1, setDrift1] = useState(0);
+  const [drift2, setDrift2] = useState(0);
 
-  // Failure timer
+  // Survival Timer & Game Over
   useEffect(() => {
     if (isGlitching && !minigameWon) {
-      const dt = setTimeout(() => {
-        if (useLaplaceStore.getState().sigma > -2) {
+      const interval = setInterval(() => {
+        setTimer(prev => {
+          if (prev <= 0) {
+            clearInterval(interval);
+            setMinigameWon(true);
+            setTimeout(() => {
+              setLevelStage('OUTRO');
+              setSigma(0);
+            }, 1000);
+            return 0;
+          }
+          return prev - 1;
+        });
+
+        // Fail if sigma goes too far right
+        if (useLaplaceStore.getState().sigma > 4.8) {
           setLevelStage('DEATH');
         }
-      }, 15000); // 15 seconds to survive parameter
-      return () => clearTimeout(dt);
-    }
-  }, [isGlitching, minigameWon, setLevelStage]);
-
-  // Winning the minigame
-  useEffect(() => {
-    if (isGlitching && sigma <= -2 && !minigameWon) {
-      setMinigameWon(true);
-      // Brief pause before playing outro video
-      setTimeout(() => {
-        setLevelStage('OUTRO');
-        setSigma(0); // reset noise
       }, 1000);
+      return () => clearInterval(interval);
     }
-  }, [sigma, isGlitching, minigameWon, setLevelStage, setSigma]);
+  }, [isGlitching, minigameWon, setLevelStage, setSigma]);
+
+  // Mandatory Drift Logic (Every frame)
+  useEffect(() => {
+    if (isGlitching && !minigameWon) {
+      let frameId: number;
+      const drift = () => {
+        // System pulls sigma towards the right (unstable)
+        // Complexity increases as time runs out
+        const intensity = 0.01 + (15 - timer) * 0.002; 
+        setSigma(useLaplaceStore.getState().sigma + intensity);
+
+        // Individual visual wobbles
+        setDrift1(Math.sin(Date.now() / 200) * 0.2);
+        setDrift2(Math.cos(Date.now() / 300) * 0.3);
+
+        frameId = requestAnimationFrame(drift);
+      };
+      frameId = requestAnimationFrame(drift);
+      return () => cancelAnimationFrame(frameId);
+    }
+  }, [isGlitching, minigameWon, setSigma, timer]);
 
   if (levelStage === 'INTRO') {
      return (
@@ -69,7 +97,6 @@ export function Level2Display() {
   if (levelStage === 'INTERACT') {
     return (
       <div className={styles.layer_container}>
-        {/* Background driven by signal choice (Habits, Connections, Convolution, Soul) */}
         <div style={{
           position: 'absolute',
           inset: 0,
@@ -80,14 +107,17 @@ export function Level2Display() {
           transition: 'filter 2s ease'
         }} />
 
-        {!isGlitching && !showPopup && (
+        {!isGlitching && !showPopup && !useLaplaceStore.getState().minigameSave && (
           <video 
             key="video-clean"
             autoPlay 
             muted={false} 
             playsInline 
             className={styles.bg_video}
-            onEnded={() => setShowPopup(true)}
+            onEnded={() => {
+              useLaplaceStore.getState().setMinigameSave(true);
+              setShowPopup(true);
+            }}
             style={{ position: 'absolute', inset: 0, zIndex: 1, mixBlendMode: 'normal' }}
           >
             <source src="/preloads/level2/girl&boy(clean).webm" type="video/webm" />
@@ -101,8 +131,8 @@ export function Level2Display() {
             </audio>
 
             <div className={styles.instruction_popup} style={{ position: 'relative', top: 'auto', left: 'auto', transform: 'none' }}>
-              <h1>CRITICAL INSTABILITY</h1>
-              <p>The system is tearing itself apart. Slide the damping coefficient completely to the left (below -2) before the loop destroys you (15s).</p>
+              <h1>SYSTEM OVERLOAD</h1>
+              <p>The system is oscillating out of control. The poles are drifting toward the danger zone (+4.8). FIGHT THE DRIFT by holding the slider to the left. SURVIVE FOR 15 SECONDS.</p>
               
               <button 
                 className={styles.reboot_btn} 
@@ -110,9 +140,10 @@ export function Level2Display() {
                 onClick={() => {
                   setShowPopup(false);
                   setIsGlitching(true);
+                  setSigma(-3); // Start user in a safe spot
                 }}
               >
-                [ OK ]
+                [ STABILIZE ]
               </button>
             </div>
           </div>
@@ -132,19 +163,21 @@ export function Level2Display() {
             </video>
 
             <div className={styles.damping_ui}>
-              <label>SYSTEM NOISE DAMPING (REAL PART \sigma)</label>
+              <div style={{ color: '#ff003c', fontSize: '1.5rem', marginBottom: '1rem' }}>STABILITY TIMER: {timer}s</div>
+              <label>PULL LEFT TO FIGHT DRIFT ( \sigma )</label>
               <input 
                 type="range" 
                 min="-5" 
                 max="5" 
-                step="0.1" 
+                step="0.01" 
                 value={sigma} 
                 onChange={(e) => setSigma(parseFloat(e.target.value))}
                 className={styles.slider}
               />
               <div className={styles.poles_grid}>
-                 <div className={styles.pole_mark} style={{ left: `calc(50% + ${sigma * 10}px)`, top: '30%' }}>✕</div>
-                 <div className={styles.pole_mark} style={{ left: `calc(50% + ${sigma * 10}px)`, top: '70%' }}>✕</div>
+                 <div className={styles.pole_mark} style={{ left: `calc(50% + ${(sigma + drift1) * 20}px)`, top: '30%' }}>✕</div>
+                 <div className={styles.pole_mark} style={{ left: `calc(50% + ${(sigma + drift2) * 20}px)`, top: '70%' }}>✕</div>
+                 <div style={{ position: 'absolute', right: 0, width: '10px', height: '100%', background: 'rgba(255,0,0,0.3)', borderLeft: '2px dashed red' }} />
               </div>
             </div>
           </>

@@ -1,9 +1,17 @@
+import { useEffect, useRef } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
 import styles from './Level0.module.css';
 import { Terminal } from 'lucide-react';
 
 export function Level0() {
   const { setLevel, levelStage, setLevelStage } = useLaplaceStore();
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.5;
+    }
+  }, []);
 
   if (levelStage === 'TIME_DOMAIN_VIDEO') {
     return (
@@ -25,6 +33,10 @@ export function Level0() {
 
   return (
     <div className={styles.container}>
+      <audio ref={audioRef} autoPlay loop>
+        <source src="/preloads/landingSong.mp3" type="audio/mpeg" />
+        <source src="/preloads/landingSong.wav" type="audio/wav" />
+      </audio>
       <div className={styles.screen}>
         <div className={styles.header}>
           <Terminal size={24} className={styles.icon} />

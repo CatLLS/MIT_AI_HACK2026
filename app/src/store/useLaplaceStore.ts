@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type LevelStage = 'LANDING' | 'TIME_DOMAIN_VIDEO' | 'CLI' | 'INTRO' | 'PRE_INTERACT' | 'INTERACT' | 'OUTRO' | 'BREAKING' | 'MONTAGE' | 'DEATH';
+export type LevelStage = 'LANDING' | 'TIME_DOMAIN_VIDEO' | 'CLI' | 'INTRO' | 'PRE_INTERACT' | 'INTERACT' | 'OUTRO' | 'BREAKING' | 'MONTAGE' | 'PANORAMA' | 'DEATH';
 export type LensType = 'Sarcasm' | 'Logic' | 'Velocity' | 'Damping' | null;
 
 interface LaplaceState {
@@ -14,6 +14,7 @@ interface LaplaceState {
   userHabit: string | null;
   userLens: LensType;
   finalAnswer: string | null;
+  minigameSave: boolean;
 
   // The Stability Math (s = sigma + j*omega)
   level: number; // 0=Landing, 1=Dot, 2=Linear, 3=Quadratic, 4=Climax
@@ -26,6 +27,7 @@ interface LaplaceState {
   setLevelStage: (stage: LevelStage) => void;
   setSigma: (sigma: number) => void;
   setOmega: (omega: number) => void;
+  setMinigameSave: (val: boolean) => void;
 
   // Setters for inputs that map to coordinates
   setConstant: (val: string) => void;
@@ -43,6 +45,7 @@ const initialState = {
   userHabit: null,
   userLens: null,
   finalAnswer: null,
+  minigameSave: false,
   level: 0,
   levelStage: 'LANDING' as LevelStage,
   sigma: -1, // Start stable
@@ -59,6 +62,7 @@ export const useLaplaceStore = create<LaplaceState>()(
       setLevelStage: (stage) => set({ levelStage: stage }),
       setSigma: (sigma) => set({ sigma }),
       setOmega: (omega) => set({ omega }),
+      setMinigameSave: (minigameSave) => set({ minigameSave }),
 
       setConstant: (val) => set({ userConstant: val, levelStage: 'INTRO' }),
       setHabit: (val) => set({ userHabit: val, levelStage: 'INTRO' }),
@@ -95,7 +99,8 @@ export const useLaplaceStore = create<LaplaceState>()(
         level: Math.max(0, state.level),
         sigma: state.sigma,
         omega: state.omega,
-        useFallback: state.useFallback
+        useFallback: state.useFallback,
+        minigameSave: state.minigameSave
       }),
     }
   )

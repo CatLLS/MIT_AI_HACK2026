@@ -21,70 +21,87 @@
   font-size: 0.85rem; 
   line-height: 1.6; 
   opacity: 0.6;
-  transition: opacity 0.5s ease-in-out;
 }
 
-.final_text_overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: var(--font-sans);
-  color: #fff;
-  font-size: 5rem;
-  letter-spacing: 1rem;
-  text-transform: uppercase;
-  z-index: 200;
-  pointer-events: none;
-  animation: message-reveal 5s ease-in-out forwards;
-  text-shadow: 0 0 20px rgba(157, 0, 255, 0.8), 0 0 40px #fff;
-  text-align: center;
-}
-
-.subtext {
-  font-size: 1.5rem;
-  letter-spacing: 0.5rem;
-  margin-top: 1rem;
-  color: #ff003c; /* Red as requested for the player's truth */
-  font-family: var(--font-mono);
-  font-weight: bold;
-}
-
-@keyframes message-reveal {
-  0%   { opacity: 0; filter: blur(20px); transform: translate(-50%, -50%) scale(1.2); }
-  20%  { opacity: 1; filter: blur(0);    transform: translate(-50%, -50%) scale(1); }
-  80%  { opacity: 1; filter: blur(0);    transform: translate(-50%, -50%) scale(1); }
-  100% { opacity: 0; filter: blur(20px); transform: translate(-50%, -50%) scale(0.8); }
-}
-
-/* Credits Section */
+/* Credits Section - Centered Overhaul */
 .credits_container {
   position: absolute;
   inset: 0;
   z-index: 300;
-  background-color: transparent;
   display: flex;
-  justify-content: flex-end; /* Right side as usually seen in games */
+  justify-content: center; /* Centered */
   pointer-events: none;
   overflow: hidden;
+  animation: fade-in-bg 3s ease-in forwards;
+}
+
+@keyframes fade-in-bg {
+  from { background-color: rgba(0,0,0,0); }
+  to { background-color: rgba(0,0,0,0.7); }
 }
 
 .credits_scroller {
-  padding: 100vh 50px 100px 0; /* Moved 10px left as requested */
-  width: 400px;
+  padding: 110vh 0 110vh 0; /* Start far below, end far above */
+  width: 800px;
+  max-width: 90vw;
+  text-align: center;
   animation: credits-roll 60s linear forwards;
 }
 
 .credits_line {
   color: #c77dff;
   font-family: var(--font-mono);
-  font-size: 0.9rem;
-  line-height: 1.4;
-  white-space: pre;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  white-space: pre-wrap;
   text-shadow: 0 0 5px rgba(157, 0, 255, 0.5);
+  margin-bottom: 0.5rem;
+}
+
+.mithack_logo {
+  display: block;
+  width: 150px;
+  margin: 100px auto;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 10px #c77dff);
 }
 
 @keyframes credits-roll {
   from { transform: translateY(0); }
-  to   { transform: translateY(-120%); } /* Sufficient to roll through text */
+  to   { transform: translateY(-300%); } /* Ensure it goes fully out */
+}
+
+.the_end_overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  animation: final-fade 5s ease-in forwards;
+}
+
+.the_end_text {
+  color: white;
+  font-family: var(--font-sans);
+  font-size: 3rem;
+  letter-spacing: 1.5rem;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: text-reveal 2s ease-in 5s forwards;
+}
+
+@keyframes final-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes text-reveal {
+  from { opacity: 0; transform: scale(0.9); filter: blur(10px); }
+  to { opacity: 1; transform: scale(1); filter: blur(0); }
 }

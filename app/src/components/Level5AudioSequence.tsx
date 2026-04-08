@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
+import { PanoramaView } from './PanoramaView';
 
-type AudioPhase = 'audio16' | 'audio17' | 'audio18' | 'done';
+type AudioPhase = 'audio14' | 'audio16' | 'audio17' | 'prompt';
 
 export function Level5AudioSequence() {
   const { setLevelStage, setLevel } = useLaplaceStore();
-  const [audioPhase, setAudioPhase] = useState<AudioPhase>('audio16');
+  const [audioPhase, setAudioPhase] = useState<AudioPhase>('audio14');
 
   const handleDeath = () => {
     setLevelStage('DEATH');
@@ -16,26 +17,36 @@ export function Level5AudioSequence() {
   };
 
   return (
-    <>
-      {/* Audio 16 -> 17 -> 18 chain */}
-      {audioPhase === 'audio16' && (
-        <audio autoPlay onEnded={() => setAudioPhase('audio17')}>
-          <source src="/preloads/climax/16v1.wav" type="audio/wav" />
-        </audio>
-      )}
-      {audioPhase === 'audio17' && (
-        <audio autoPlay onEnded={() => setAudioPhase('audio18')}>
-          <source src="/preloads/climax/17v1.wav" type="audio/wav" />
-        </audio>
-      )}
-      {audioPhase === 'audio18' && (
-        <audio autoPlay>
-          <source src="/preloads/climax/18v1.wav" type="audio/wav" />
-        </audio>
-      )}
+    <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>
+      {/* 360 Panorama Background */}
+      <PanoramaView />
 
-      {/* On audio18, show the "open your eyes?" overlay */}
-      {(audioPhase === 'audio18' || audioPhase === 'done') && (
+      {/* Audio Chain Logic */}
+      <div style={{ pointerEvents: 'none' }}>
+        {audioPhase === 'audio14' && (
+          <audio autoPlay onEnded={() => setAudioPhase('audio16')}>
+            <source src="/preloads/climax/14v1.wav" type="audio/wav" />
+          </audio>
+        )}
+        {audioPhase === 'audio16' && (
+          <audio autoPlay onEnded={() => setAudioPhase('audio17')}>
+            <source src="/preloads/climax/16v1.wav" type="audio/wav" />
+          </audio>
+        )}
+        {audioPhase === 'audio17' && (
+          <audio autoPlay onEnded={() => setAudioPhase('prompt')}>
+            <source src="/preloads/climax/17v1.wav" type="audio/wav" />
+          </audio>
+        )}
+        {audioPhase === 'prompt' && (
+          <audio autoPlay>
+            <source src="/preloads/climax/18v1.wav" type="audio/wav" />
+          </audio>
+        )}
+      </div>
+
+      {/* Overlay appears after audio14, 16, 17 finished */}
+      {audioPhase === 'prompt' && (
         <div style={{
           position: 'fixed',
           inset: 0,
@@ -44,7 +55,8 @@ export function Level5AudioSequence() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          background: 'rgba(0, 0, 0, 0.92)',
+          background: 'rgba(0, 0, 0, 0.4)', // Slightly less opaque than before to see the panorama
+          backdropFilter: 'blur(5px)',
           fontFamily: "'Courier New', monospace",
         }}>
           <p style={{
@@ -58,7 +70,7 @@ export function Level5AudioSequence() {
             open your eyes?
           </p>
 
-          <div style={{ display: 'flex', gap: '2rem' }}>
+          <div style={{ display: 'flex', gap: '2rem', pointerEvents: 'auto' }}>
             <button
               onClick={handleOpenEyes}
               style={{
@@ -115,6 +127,14 @@ export function Level5AudioSequence() {
           </div>
         </div>
       )}
-    </>
+      
+      <style>{`
+        @keyframes pulse {
+          0% { opacity: 0.6; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.05); }
+          100% { opacity: 0.6; transform: scale(1); }
+        }
+      `}</style>
+    </div>
   );
 }

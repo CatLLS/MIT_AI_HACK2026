@@ -1,0 +1,52 @@
+.crt_wrapper {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.scanlines {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.25) 50%
+  ),
+  linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.08),
+    rgba(0, 255, 0, 0.03),
+    rgba(0, 0, 255, 0.08)
+  );
+  background-size: 100% 3px, 3px 100%;
+  pointer-events: none;
+}
+
+.flicker {
+  position: absolute;
+  inset: 0;
+  background: rgba(18, 16, 16, 0.05);
+  opacity: 0;
+  pointer-events: none;
+  animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+  0%   { opacity: 0.15; }
+  50%  { opacity: 0.05; }
+  100% { opacity: 0.2; }
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle,
+    rgba(0, 0, 0, 0) 60%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  pointer-events: none;
+}

@@ -3,6 +3,39 @@ import { useLaplaceStore } from '../store/useLaplaceStore';
 import type { LensType } from '../store/useLaplaceStore';
 import styles from './CLI.module.css';
 
+function TypewriterLine({ text, instant, onDone }: { text: string; instant?: boolean; onDone?: () => void }) {
+  const [content, setContent] = useState('');
+  const onDoneRef = useRef(onDone);
+  
+  useEffect(() => {
+    onDoneRef.current = onDone;
+  }, [onDone]);
+
+  useEffect(() => {
+    if (instant) {
+      setContent(text);
+      const timer = setTimeout(() => {
+        onDoneRef.current?.();
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+
+    let i = 0;
+    const interval = setInterval(() => {
+      setContent(text.substring(0, i + 1));
+      i++;
+      if (i >= text.length) {
+        clearInterval(interval);
+        onDoneRef.current?.();
+      }
+    }, 30); // Visually fast but distinct typewriter feel
+
+    return () => clearInterval(interval);
+  }, [text, instant]);
+
+  return <>{content}</>;
+}
+
 export function CLI() {
   const { 
     level, 
@@ -14,13 +47,33 @@ export function CLI() {
   } = useLaplaceStore();
   
   const [logs, setLogs] = useState<string[]>([]);
+  const [renderedCount, setRenderedCount] = useState(0);
+  const [isTyping, setIsTyping] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [logs]);
+  }, [logs, renderedCount]);
+
+  // The Typewriter Engine
+  useEffect(() => {
+    if (!isTyping && renderedCount < logs.length) {
+      setRenderedCount(prev => prev + 1);
+      setIsTyping(true);
+    }
+  }, [isTyping, renderedCount, logs.length]);
+
+  // Level 5 Sequence: Auto-close terminal after typing is done
+  useEffect(() => {
+    if (level === 5 && !isTyping && renderedCount === logs.length && logs.length > 0) {
+      const timer = setTimeout(() => {
+        useLaplaceStore.getState().setLevelStage('PANORAMA');
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [level, isTyping, renderedCount, logs.length]);
 
   // Initial logs per level
   useEffect(() => {
@@ -30,7 +83,7 @@ export function CLI() {
         `> System Status: MARGINALLY STABLE (sigma: ${sigma.toFixed(1)})`,
         '> Complexity Level: 1 (Linear Initialization)',
         '> To stabilize the singularity, identify the Constant.',
-        "> If you were a single point in infinity, What is the one thing in your life that stays at $t = \infty$?",
+        "> If you were a single point in infinity, What is the one thing in your life that stays at $t = \\infty$?",
         '1: The ghost of a memory that feels more real than the present. [Nostalgia]',
         '2: The curiosity about what happens on the very last page I’ll never read. [Longing]',
         '3: The cold comfort of knowing that 1 + 1 will always equal 2. [Logic]',
@@ -95,6 +148,7 @@ export function CLI() {
     if (!inputValue.trim()) return;
 
     const val = inputValue.trim();
+    setInputValue('');
     
     if (level === 1) {
       const mapping: Record<string, string> = {
@@ -104,9 +158,9 @@ export function CLI() {
         '4': 'insanity'
       };
       if (!mapping[val]) {
-        setLogs((prev) => [...prev, `> ${inputValue}`, '[ERROR] Invalid choice. Choose 1, 2, 3, or 4.']);
+        setLogs((prev) => [...prev, `>> ${val}`, '[ERROR] Invalid choice. Choose 1, 2, 3, or 4.']);
       } else {
-        setLogs((prev) => [...prev, `> ${inputValue}`, `> Constant identified: [${mapping[val]}]`]);
+        setLogs((prev) => [...prev, `>> ${val}`, `> Constant identified: [${mapping[val]}]`]);
         setConstant(mapping[val]);
       }
     } else if (level === 2) {
@@ -117,9 +171,9 @@ export function CLI() {
         '4': 'Soul'
       };
       if (!mapping[val]) {
-        setLogs((prev) => [...prev, `> ${inputValue}`, '[ERROR] Invalid choice. Choose 1, 2, 3, or 4.']);
+        setLogs((prev) => [...prev, `>> ${val}`, '[ERROR] Invalid choice. Choose 1, 2, 3, or 4.']);
       } else {
-        setLogs((prev) => [...prev, `> ${inputValue}`, `> Signal identified: [${mapping[val]}]`]);
+        setLogs((prev) => [...prev, `>> ${val}`, `> Signal identified: [${mapping[val]}]`]);
         setHabit(mapping[val]);
       }
     } else if (level === 3) {
@@ -130,22 +184,20 @@ export function CLI() {
         '4': 'Damping'
       };
       if (!mapping[val]) {
-        setLogs((prev) => [...prev, `> ${inputValue}`, '[ERROR] Invalid choice. Choose 1, 2, 3, or 4.']);
+        setLogs((prev) => [...prev, `>> ${val}`, '[ERROR] Invalid choice. Choose 1, 2, 3, or 4.']);
       } else {
-        setLogs((prev) => [...prev, `> ${inputValue}`, `> Filter identified: [${mapping[val]}]`]);
+        setLogs((prev) => [...prev, `>> ${val}`, `> Filter identified: [${mapping[val]}]`]);
         setLens(mapping[val]);
       }
     } else if (level === 4) {
-      setLogs((prev) => [...prev, `> ${inputValue}`]);
+      setLogs((prev) => [...prev, `>> ${val}`]);
       setFinalAnswer(val);
     } else if (level === 5) {
-      setLogs((prev) => [...prev, `> ${inputValue}`]);
+      setLogs((prev) => [...prev, `>> ${val}`]);
       if (val.toLowerCase() === 'y') {
         useLaplaceStore.getState().setLevel(6); 
       }
     }
-
-    setInputValue('');
   };
 
   if (level === 0 || level > 5 || useLaplaceStore.getState().levelStage !== 'CLI') return null;
@@ -154,15 +206,27 @@ export function CLI() {
     <div className={`${styles.cli_container} ${sigma > 0 ? 'glitch-text' : ''}`}>
       <div className={styles.terminal}>
         <div className={styles.logs}>
-          {logs.map((log, i) => (
-            <div key={i} className={styles.log_line}>
-              {log}
-            </div>
-          ))}
+          {logs.slice(0, renderedCount).map((log, i) => {
+            const isInstant = log.startsWith('>> ');
+            const displayText = isInstant ? log.replace('>> ', '> ') : log;
+            
+            if (i === renderedCount - 1 && isTyping) {
+              return (
+                <div key={i} className={styles.log_line}>
+                  <TypewriterLine 
+                    text={displayText} 
+                    instant={isInstant}
+                    onDone={() => setIsTyping(false)} 
+                  />
+                </div>
+              );
+            }
+            return <div key={i} className={styles.log_line}>{displayText}</div>;
+          })}
           <div ref={bottomRef} />
         </div>
         
-        {level < 5 && (
+        {level < 5 && renderedCount === logs.length && !isTyping && (
           <form className={styles.input_line} onSubmit={handleSubmit}>
             <span className={styles.prompt}>{'>'}</span>
             <input 
