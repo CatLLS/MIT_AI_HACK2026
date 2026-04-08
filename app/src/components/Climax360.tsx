@@ -3,21 +3,11 @@ import { Canvas, extend, useThree, useFrame } from '@react-three/fiber';
 import { WalkControls } from './WalkControls';
 import { SplatMesh, SparkRenderer } from '@sparkjsdev/spark';
 import * as THREE from 'three';
-import { useLaplaceStore } from '../store/useLaplaceStore';
 import styles from './Climax360.module.css';
 
 // Register Spark components with R3F
 extend({ SplatMesh, SparkRenderer });
 
-// TypeScript declarations for JSX elements
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      splatMesh: any;
-      sparkRenderer: any;
-    }
-  }
-}
 
 const TARGET_POS = new THREE.Vector3(0.02, -0.13, 1.80);
 const START_POS = new THREE.Vector3(0.02, 10, 1.80); // Falling from Y=10
@@ -46,8 +36,8 @@ function CinematicScene({ onLanded }: { onLanded: () => void }) {
     }
   });
 
-  const sparkArgs = useMemo(() => [{ renderer: gl, autoUpdate: true }], [gl]);
-  const splatArgs = useMemo(() => [{ url: "/preloads/climax/3dSplatWorld.spz" }], []);
+  const sparkArgs = useMemo(() => [{ renderer: gl, autoUpdate: true }] as const, [gl]);
+  const splatArgs = useMemo(() => [{ url: "/preloads/climax/3dSplatWorld.spz" }] as const, []);
 
   return (
     <sparkRenderer ref={sparkRef} args={sparkArgs} frustumCulled={false}>

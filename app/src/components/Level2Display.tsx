@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
 import styles from './LevelDisplay.module.css';
 
