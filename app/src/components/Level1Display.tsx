@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
 import { VideoPlayer } from './VideoPlayer';
 import styles from './LevelDisplay.module.css';
+import { VIDEOS, AUDIO, getConstantImage } from '../assets/mediaManifest';
 
 export function Level1Display() {
   const { levelStage, userConstant, setLevelStage } = useLaplaceStore();
@@ -35,17 +36,14 @@ export function Level1Display() {
     return (
       <>
         {/* Narrator audio */}
-        <audio autoPlay>
-          <source src="/preloads/level1/4v2.wav" type="audio/wav" />
-        </audio>
+        <audio autoPlay src={AUDIO.L1_NARRATOR} />
         {/* Whisper loop */}
         <audio 
           ref={whisperRef}
           autoPlay 
+          src={AUDIO.L1_WHISPER}
           onEnded={handleWhisperEnded}
-        >
-          <source src="/preloads/level1/iclosedmyeyesWhisper.wav" type="audio/wav" />
-        </audio>
+        />
       </>
     );
   }
@@ -54,7 +52,7 @@ export function Level1Display() {
      return (
        <div className={styles.transition_container}>
          <VideoPlayer 
-           sourceSrc="/preloads/level1/level0DotIntro.mp4"
+           sourceSrc={VIDEOS.L1_DOT_INTRO}
            autoPlay 
            muted={false} 
            playsInline className={styles.transition_video}
@@ -68,11 +66,11 @@ export function Level1Display() {
      return (
        <div className={styles.transition_container}>
          <VideoPlayer 
-           sourceSrc="/preloads/level1/dotLevelEnding.mp4"
+           sourceSrc={VIDEOS.L1_ENDING}
            autoPlay 
            muted={false} 
            playsInline className={styles.transition_video}
-           onEnded={() => setLevelStage('PRE_INTERACT')} // A stage to transition to Level 2
+           onEnded={() => setLevelStage('PRE_INTERACT')}
          />
        </div>
      );
@@ -92,17 +90,15 @@ export function Level1Display() {
           <VideoPlayer 
             key="video-click-pixel"
             ref={clickVideoRef}
-            sourceSrc="/preloads/level1/videoClickOnPixel.mp4"
+            sourceSrc={VIDEOS.L1_CLICK_PIXEL}
             className={styles.bg_video} 
             autoPlay 
             muted={false} 
             playsInline
             onEnded={() => setLevelStage('OUTRO')}
-            // Backup for robust ending check
             onTimeUpdate={(e) => {
               const video = e.currentTarget;
               if (video.duration && video.currentTime >= video.duration - 0.5) {
-                // Ensure it transitions even if onEnded is unreliable with this specific .mp4 encoding
                 setLevelStage('OUTRO');
               }
             }}
@@ -124,11 +120,9 @@ export function Level1Display() {
               transition: 'transform 2s ease'
             }}
           >
-            {/* The preloaded generated image from choices (Nostalgia, Longing, Logic, insanity) */}
             <img 
-              src={`/preloads/level1/${userConstant.toLowerCase()}Point.png`} 
+              src={getConstantImage(userConstant)}
               alt={userConstant} 
-              onError={(e) => { e.currentTarget.src = "/preloads/level1/nostalgiaPoint.png" }} 
             />
             {!clickedConstant && <span className={styles.orb_label}>{userConstant}</span>}
           </div>

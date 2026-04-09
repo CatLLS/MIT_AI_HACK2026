@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
 import { VideoPlayer } from './VideoPlayer';
 import styles from './LevelDisplay.module.css';
+import { VIDEOS, AUDIO, getLensImage } from '../assets/mediaManifest';
 
 export function Level3Display() {
   const { levelStage, userLens, setLevelStage, setLevel } = useLaplaceStore();
@@ -27,7 +28,7 @@ export function Level3Display() {
      return (
        <div className={styles.transition_container}>
          <VideoPlayer 
-           sourceSrc="/preloads/level3/PianoIntro.mp4"
+           sourceSrc={VIDEOS.L3_PIANO_INTRO}
            autoPlay 
            muted={false} 
            playsInline className={styles.transition_video}
@@ -43,7 +44,7 @@ export function Level3Display() {
         <VideoPlayer 
           key="l3-interact"
           ref={videoRef}
-          sourceSrc="/preloads/level3/level3Interact.mp4"
+          sourceSrc={VIDEOS.L3_INTERACT}
           className={styles.bg_video} 
           autoPlay 
           muted={false}
@@ -61,17 +62,16 @@ export function Level3Display() {
           <>
             <audio 
               autoPlay 
+              src={AUDIO.L3_NARRATOR}
               onEnded={() => {
                 setLevel(4);
                 setLevelStage('CLI');
               }}
-            >
-              <source src="/preloads/level3/13v1.wav" type="audio/wav" />
-            </audio>
+            />
 
             {userLens && (
               <img 
-                src={`/preloads/level3/girl${userLens === 'Sarcasm' ? 'Sarcasmo' : userLens}.png`} 
+                src={getLensImage(userLens)}
                 className={styles.lens_reflection_fade}
                 alt={userLens} 
               />

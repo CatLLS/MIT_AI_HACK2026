@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
 import { PanoramaView } from './PanoramaView';
 import styles from './Climax360.module.css';
+import { AUDIO } from '../assets/mediaManifest';
 
 type AudioPhase = 'audio14' | 'audio16' | 'audio17' | 'prompt';
 
@@ -29,24 +30,16 @@ export function Level5AudioSequence() {
       {/* Audio Chain Logic */}
       <div style={{ pointerEvents: 'none' }}>
         {audioPhase === 'audio14' && (
-          <audio autoPlay onEnded={() => setAudioPhase('audio16')}>
-            <source src="/preloads/climax/14v1.wav" type="audio/wav" />
-          </audio>
+          <audio autoPlay src={AUDIO.CLIMAX_14} onEnded={() => setAudioPhase('audio16')} />
         )}
         {audioPhase === 'audio16' && (
-          <audio autoPlay onEnded={() => setAudioPhase('audio17')}>
-            <source src="/preloads/climax/16v1.wav" type="audio/wav" />
-          </audio>
+          <audio autoPlay src={AUDIO.CLIMAX_16} onEnded={() => setAudioPhase('audio17')} />
         )}
         {audioPhase === 'audio17' && (
-          <audio autoPlay onEnded={() => setAudioPhase('prompt')}>
-            <source src="/preloads/climax/17v1.wav" type="audio/wav" />
-          </audio>
+          <audio autoPlay src={AUDIO.CLIMAX_17} onEnded={() => setAudioPhase('prompt')} />
         )}
         {audioPhase === 'prompt' && (
-          <audio autoPlay>
-            <source src="/preloads/climax/18v1.wav" type="audio/wav" />
-          </audio>
+          <audio autoPlay src={AUDIO.CLIMAX_18} />
         )}
       </div>
 

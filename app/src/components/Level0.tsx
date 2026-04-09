@@ -3,6 +3,7 @@ import { useLaplaceStore } from '../store/useLaplaceStore';
 import styles from './Level0.module.css';
 import { Terminal } from 'lucide-react';
 import { VideoPlayer } from './VideoPlayer';
+import { VIDEOS, AUDIO } from '../assets/mediaManifest';
 
 export function Level0() {
   const { setLevel, levelStage, setLevelStage } = useLaplaceStore();
@@ -18,7 +19,7 @@ export function Level0() {
     return (
       <div className={styles.container} style={{ background: '#000', padding: 0 }}>
         <VideoPlayer 
-          sourceSrc="/preloads/Introduction(I)-the-time-domain.mp4"
+          sourceSrc={VIDEOS.TIME_DOMAIN_INTRO}
           autoPlay 
           playsInline 
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -33,10 +34,7 @@ export function Level0() {
 
   return (
     <div className={styles.container}>
-      <audio ref={audioRef} autoPlay loop>
-        <source src="/preloads/landingSong.mp3" type="audio/mpeg" />
-        <source src="/preloads/landingSong.wav" type="audio/wav" />
-      </audio>
+      <audio ref={audioRef} autoPlay loop src={AUDIO.LANDING_SONG} />
       <div className={styles.screen}>
         <div className={styles.header}>
           <Terminal size={24} className={styles.icon} />

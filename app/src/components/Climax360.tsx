@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import { useLaplaceStore } from '../store/useLaplaceStore';
 import katex from 'katex';
 import styles from './Climax360.module.css';
+import { AUDIO, IMAGES, OTHER } from '../assets/mediaManifest';
 
 // Register Spark components with R3F
 extend({ SplatMesh, SparkRenderer });
@@ -205,7 +206,7 @@ function CinematicScene({ onLanded }: { onLanded: () => void }) {
   });
 
   const sparkArgs = useMemo(() => [{ renderer: gl, autoUpdate: true }] as const, [gl]);
-  const splatArgs = useMemo(() => [{ url: "/preloads/climax/3dSplatWorld.spz" }] as const, []);
+  const splatArgs = useMemo(() => [{ url: OTHER.SPLAT_WORLD }] as const, []);
 
   return (
     <sparkRenderer ref={sparkRef} args={sparkArgs} frustumCulled={false}>
@@ -223,7 +224,7 @@ export function Climax360() {
 
   // Load credits
   useEffect(() => {
-    fetch('/preloads/credits.txt')
+    fetch(OTHER.CREDITS_TXT)
       .then(res => res.text())
       .then(setCreditsText)
       .catch(() => setCreditsText("..."));
@@ -231,7 +232,7 @@ export function Climax360() {
 
   // Initial enter audio (19v1) - Falling atmospheric cue
   useEffect(() => {
-    const audio = new Audio('/preloads/19v1.wav');
+    const audio = new Audio(AUDIO.CLIMAX_19);
     audio.play().catch(() => { });
 
     // Play background music right after this finishes
@@ -274,7 +275,7 @@ export function Climax360() {
       {/* Background Song for credits */}
       <audio
         ref={musicRef}
-        src="/preloads/spencer_yk-light-trails-151006.mp3"
+        src={AUDIO.CLIMAX_MUSIC}
         loop
       />
 
@@ -306,7 +307,7 @@ export function Climax360() {
             ))}
 
             {/* Logo at the end of scroll */}
-            <img src="/preloads/MITHack.webp" className={styles.mithack_logo} alt="MIT Hack" />
+            <img src={IMAGES.MIT_HACK_LOGO} className={styles.mithack_logo} alt="MIT Hack" />
           </div>
         </div>
       )}

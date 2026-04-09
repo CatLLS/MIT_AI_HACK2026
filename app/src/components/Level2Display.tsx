@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
 import { VideoPlayer } from './VideoPlayer';
 import styles from './LevelDisplay.module.css';
+import { VIDEOS, AUDIO, getSkyImage } from '../assets/mediaManifest';
 
 export function Level2Display() {
   const { levelStage, sigma, setSigma, userHabit, setLevelStage, setLevel } = useLaplaceStore();
@@ -66,7 +67,7 @@ export function Level2Display() {
      return (
        <div className={styles.transition_container}>
          <VideoPlayer 
-           sourceSrc="/preloads/level2/level2Intro.mp4"
+           sourceSrc={VIDEOS.L2_INTRO}
            autoPlay 
            muted={false} 
            playsInline className={styles.transition_video}
@@ -80,7 +81,7 @@ export function Level2Display() {
      return (
        <div className={styles.transition_container}>
          <VideoPlayer 
-           sourceSrc="/preloads/level2/Level2End.mp4"
+           sourceSrc={VIDEOS.L2_ENDING}
            autoPlay 
            muted={false} 
            playsInline className={styles.transition_video}
@@ -99,7 +100,7 @@ export function Level2Display() {
         <div style={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: `url(/preloads/level2/sky${userHabit === 'Convolution' ? 'Convoluted' : userHabit}.png)`,
+          backgroundImage: `url(${getSkyImage(userHabit || '')})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           filter: minigameWon ? 'grayscale(100%) brightness(0.7)' : 'none',
@@ -109,7 +110,7 @@ export function Level2Display() {
         {!isGlitching && !showPopup && !useLaplaceStore.getState().minigameSave && (
           <VideoPlayer 
             key="video-clean"
-            sourceSrc="/preloads/level2/girl&boy(clean).mp4"
+            sourceSrc={VIDEOS.L2_GIRL_BOY_CLEAN}
             autoPlay 
             muted={false} 
             playsInline 
@@ -124,9 +125,7 @@ export function Level2Display() {
 
         {showPopup && (
           <div style={{ position: 'absolute', zIndex: 100, inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.5)' }}>
-            <audio autoPlay>
-              <source src="/preloads/level2/10v2.wav" type="audio/wav" />
-            </audio>
+            <audio autoPlay src={AUDIO.L2_NARRATOR} />
 
             <div className={styles.instruction_popup} style={{ position: 'relative', top: 'auto', left: 'auto', transform: 'none' }}>
               <h1>SYSTEM OVERLOAD</h1>
@@ -150,7 +149,7 @@ export function Level2Display() {
         {isGlitching && !minigameWon && (
           <>
             <VideoPlayer 
-              sourceSrc="/preloads/level2/girl&boyGlitch.mp4"
+              sourceSrc={VIDEOS.L2_GIRL_BOY_GLITCH}
               autoPlay 
               loop
               muted={false} 

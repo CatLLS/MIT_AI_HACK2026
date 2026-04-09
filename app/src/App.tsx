@@ -10,6 +10,7 @@ import { CRTOverlay } from './components/CRTOverlay';
 import { LoadingScreen } from './components/LoadingScreen';
 import { useAssetPreloader } from './hooks/useAssetPreloader';
 import { VideoPlayer } from './components/VideoPlayer';
+import { VIDEOS } from './assets/mediaManifest';
 import './index.css';
 import { useEffect } from 'react';
 
@@ -79,7 +80,7 @@ function App() {
       {levelStage === 'MONTAGE' && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 8500, background: '#000' }}>
           <VideoPlayer
-            sourceSrc="/preloads/climax/finaleMontage.mp4"
+            sourceSrc={VIDEOS.FINALE_MONTAGE}
             autoPlay
             playsInline
             muted={false}

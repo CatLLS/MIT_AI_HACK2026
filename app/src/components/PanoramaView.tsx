@@ -1,9 +1,10 @@
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
+import { IMAGES } from '../assets/mediaManifest';
 
 function SphereBackground() {
-  const texture = useTexture('/preloads/climax/360World.png');
+  const texture = useTexture(IMAGES.PANORAMA_360);
   
   return (
     <mesh scale={[-1, 1, 1]}> {/* Invert the sphere so the texture is on the inside */}
