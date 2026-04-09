@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 
 export type LevelStage = 'LANDING' | 'TIME_DOMAIN_VIDEO' | 'CLI' | 'INTRO' | 'PRE_INTERACT' | 'INTERACT' | 'OUTRO' | 'BREAKING' | 'MONTAGE' | 'PANORAMA' | 'DEATH';
 export type LensType = 'Sarcasm' | 'Logic' | 'Velocity' | 'Damping' | null;
@@ -52,56 +51,38 @@ const initialState = {
   omega: 0.5, // Start with a low frequency pulse
 };
 
-export const useLaplaceStore = create<LaplaceState>()(
-  persist(
-    (set) => ({
-      ...initialState,
+export const useLaplaceStore = create<LaplaceState>()((set) => ({
+  ...initialState,
 
-      setUseFallback: (val) => set({ useFallback: val }),
-      setLevel: (level) => set({ level }),
-      setLevelStage: (stage) => set({ levelStage: stage }),
-      setSigma: (sigma) => set({ sigma }),
-      setOmega: (omega) => set({ omega }),
-      setMinigameSave: (minigameSave) => set({ minigameSave }),
+  setUseFallback: (val) => set({ useFallback: val }),
+  setLevel: (level) => set({ level }),
+  setLevelStage: (stage) => set({ levelStage: stage }),
+  setSigma: (sigma) => set({ sigma }),
+  setOmega: (omega) => set({ omega }),
+  setMinigameSave: (minigameSave) => set({ minigameSave }),
 
-      setConstant: (val) => set({ userConstant: val, levelStage: 'INTRO' }),
-      setHabit: (val) => set({ userHabit: val, levelStage: 'INTRO' }),
-      setLens: (lens) => {
-        let newSigma = 0;
-        let newOmega = 1.0;
+  setConstant: (val) => set({ userConstant: val, levelStage: 'INTRO' }),
+  setHabit: (val) => set({ userHabit: val, levelStage: 'INTRO' }),
+  setLens: (lens) => {
+    let newSigma = 0;
+    let newOmega = 1.0;
 
-        if (lens === 'Logic') {
-          newSigma = -2;
-        } else if (lens === 'Sarcasm') {
-          newSigma = 2;
-          newOmega = 2.0;
-        } else if (lens === 'Velocity') {
-          newSigma = -1;
-          newOmega = 4.0;
-        } else if (lens === 'Damping') {
-          newSigma = -1.5;
-          newOmega = 0.5;
-        }
-
-        set({ userLens: lens, levelStage: 'INTRO', sigma: newSigma, omega: newOmega });
-      },
-      setFinalAnswer: (val) => set({ finalAnswer: val, levelStage: 'BREAKING', sigma: 20, omega: 20 }), // Trigger visual breakdown
-
-      resetExperience: () => set(initialState),
-    }),
-    {
-      name: 'laplace-storage', // name of the item in the storage (must be unique)
-      partialize: (state) => ({
-        // Only save config and user journey to local storage
-        userConstant: state.userConstant,
-        userHabit: state.userHabit,
-        userLens: state.userLens,
-        level: Math.max(0, state.level),
-        sigma: state.sigma,
-        omega: state.omega,
-        useFallback: state.useFallback,
-        minigameSave: state.minigameSave
-      }),
+    if (lens === 'Logic') {
+      newSigma = -2;
+    } else if (lens === 'Sarcasm') {
+      newSigma = 2;
+      newOmega = 2.0;
+    } else if (lens === 'Velocity') {
+      newSigma = -1;
+      newOmega = 4.0;
+    } else if (lens === 'Damping') {
+      newSigma = -1.5;
+      newOmega = 0.5;
     }
-  )
-);
+
+    set({ userLens: lens, levelStage: 'INTRO', sigma: newSigma, omega: newOmega });
+  },
+  setFinalAnswer: (val) => set({ finalAnswer: val, levelStage: 'BREAKING', sigma: 20, omega: 20 }), // Trigger visual breakdown
+
+  resetExperience: () => set(initialState),
+}));
