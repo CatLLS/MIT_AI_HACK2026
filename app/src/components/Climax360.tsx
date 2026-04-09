@@ -7,6 +7,7 @@ import { useLaplaceStore } from '../store/useLaplaceStore';
 import katex from 'katex';
 import styles from './Climax360.module.css';
 import { AUDIO, IMAGES, OTHER } from '../assets/mediaManifest';
+import { consumeBlob } from '../lib/blobCache';
 
 // Register Spark components with R3F
 extend({ SplatMesh, SparkRenderer });
@@ -181,7 +182,7 @@ function CameraRecorder() {
 const TARGET_POS = new THREE.Vector3(0.02, -0.13, 1.80);
 const START_POS = new THREE.Vector3(0.02, 10, 1.80); // Falling from Y=10
 
-function CinematicScene({ onLanded }: { onLanded: () => void }) {
+function CinematicScene({ onLanded, splatUrl }: { onLanded: () => void; splatUrl: string }) {
   const { gl, scene, camera } = useThree();
   const sparkRef = useRef<any>(null);
   const [landed, setLanded] = useState(false);
@@ -206,7 +207,7 @@ function CinematicScene({ onLanded }: { onLanded: () => void }) {
   });
 
   const sparkArgs = useMemo(() => [{ renderer: gl, autoUpdate: true }] as const, [gl]);
-  const splatArgs = useMemo(() => [{ url: OTHER.SPLAT_WORLD }] as const, []);
+  const splatArgs = useMemo(() => [{ url: splatUrl }] as const, [splatUrl]);
 
   return (
     <sparkRenderer ref={sparkRef} args={sparkArgs} frustumCulled={false}>
@@ -221,6 +222,16 @@ export function Climax360() {
   const [stage, setStage] = useState<'falling' | 'atmosphere' | 'credits' | 'finished'>('falling');
   const [creditsText, setCreditsText] = useState("");
   const musicRef = useRef<HTMLAudioElement>(null);
+
+  // Consume a pre-warmed blob URL for the splat (loaded by Level5AudioSequence's BlobPreloader).
+  // Falls back to the CDN URL if not ready. Release fn called on unmount.
+  const [{ splatUrl, releaseSplat }] = useState(() => {
+    const consumed = consumeBlob(OTHER.SPLAT_WORLD);
+    if (consumed) return { splatUrl: consumed.blobUrl, releaseSplat: consumed.release };
+    return { splatUrl: OTHER.SPLAT_WORLD, releaseSplat: () => {} };
+  });
+
+  useEffect(() => () => releaseSplat(), [releaseSplat]);
 
   // Load credits
   useEffect(() => {
@@ -292,7 +303,7 @@ export function Climax360() {
       >
         <CameraRecorder />
         <WalkControls enabled={true} />
-        <CinematicScene onLanded={() => setStage('atmosphere')} />
+        <CinematicScene onLanded={() => setStage('atmosphere')} splatUrl={splatUrl} />
         <ambientLight intensity={0.5} />
       </Canvas>
 

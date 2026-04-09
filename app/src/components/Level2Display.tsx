@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
 import { VideoPlayer } from './VideoPlayer';
+import { BlobPreloader } from './BlobPreloader';
 import styles from './LevelDisplay.module.css';
 import { VIDEOS, AUDIO, getSkyImage } from '../assets/mediaManifest';
 
@@ -66,6 +67,8 @@ export function Level2Display() {
   if (levelStage === 'INTRO') {
      return (
        <div className={styles.transition_container}>
+         {/* Preload the girl & boy clean scene while intro plays */}
+         <BlobPreloader url={VIDEOS.L2_GIRL_BOY_CLEAN} />
          <VideoPlayer 
            sourceSrc={VIDEOS.L2_INTRO}
            autoPlay 
@@ -80,6 +83,8 @@ export function Level2Display() {
   if (levelStage === 'OUTRO') {
      return (
        <div className={styles.transition_container}>
+         {/* Preload Level 3 intro while outro plays */}
+         <BlobPreloader url={VIDEOS.L3_PIANO_INTRO} />
          <VideoPlayer 
            sourceSrc={VIDEOS.L2_ENDING}
            autoPlay 
@@ -108,19 +113,23 @@ export function Level2Display() {
         }} />
 
         {!isGlitching && !showPopup && !useLaplaceStore.getState().minigameSave && (
-          <VideoPlayer 
-            key="video-clean"
-            sourceSrc={VIDEOS.L2_GIRL_BOY_CLEAN}
-            autoPlay 
-            muted={false} 
-            playsInline 
-            className={styles.bg_video}
-            onEnded={() => {
-              useLaplaceStore.getState().setMinigameSave(true);
-              setShowPopup(true);
-            }}
-            style={{ position: 'absolute', inset: 0, zIndex: 1, mixBlendMode: 'normal' }}
-          />
+          <>
+            {/* Preload the glitch video while the clean scene plays */}
+            <BlobPreloader url={VIDEOS.L2_GIRL_BOY_GLITCH} />
+            <VideoPlayer 
+              key="video-clean"
+              sourceSrc={VIDEOS.L2_GIRL_BOY_CLEAN}
+              autoPlay 
+              muted={false} 
+              playsInline 
+              className={styles.bg_video}
+              onEnded={() => {
+                useLaplaceStore.getState().setMinigameSave(true);
+                setShowPopup(true);
+              }}
+              style={{ position: 'absolute', inset: 0, zIndex: 1, mixBlendMode: 'normal' }}
+            />
+          </>
         )}
 
         {showPopup && (
@@ -148,6 +157,8 @@ export function Level2Display() {
 
         {isGlitching && !minigameWon && (
           <>
+            {/* Preload the outro while minigame runs */}
+            <BlobPreloader url={VIDEOS.L2_ENDING} />
             <VideoPlayer 
               sourceSrc={VIDEOS.L2_GIRL_BOY_GLITCH}
               autoPlay 

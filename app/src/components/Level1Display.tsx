@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
 import { VideoPlayer } from './VideoPlayer';
+import { BlobPreloader } from './BlobPreloader';
 import styles from './LevelDisplay.module.css';
 import { VIDEOS, AUDIO, getConstantImage } from '../assets/mediaManifest';
 
@@ -51,6 +52,8 @@ export function Level1Display() {
   if (levelStage === 'INTRO') {
      return (
        <div className={styles.transition_container}>
+         {/* Preload the first interactive video while intro plays */}
+         <BlobPreloader url={VIDEOS.L1_CLICK_PIXEL} />
          <VideoPlayer 
            sourceSrc={VIDEOS.L1_DOT_INTRO}
            autoPlay 
@@ -65,6 +68,8 @@ export function Level1Display() {
   if (levelStage === 'OUTRO') {
      return (
        <div className={styles.transition_container}>
+         {/* Preload Level 2 intro while this outro plays */}
+         <BlobPreloader url={VIDEOS.L2_INTRO} />
          <VideoPlayer 
            sourceSrc={VIDEOS.L1_ENDING}
            autoPlay 
@@ -87,23 +92,27 @@ export function Level1Display() {
     return (
       <div className={styles.layer_container}>
         {clickedConstant && (
-          <VideoPlayer 
-            key="video-click-pixel"
-            ref={clickVideoRef}
-            sourceSrc={VIDEOS.L1_CLICK_PIXEL}
-            className={styles.bg_video} 
-            autoPlay 
-            muted={false} 
-            playsInline
-            onEnded={() => setLevelStage('OUTRO')}
-            onTimeUpdate={(e) => {
-              const video = e.currentTarget;
-              if (video.duration && video.currentTime >= video.duration - 0.5) {
-                setLevelStage('OUTRO');
-              }
-            }}
-            style={{ zIndex: 0 }}
-          />
+          <>
+            {/* Preload outro while click animation plays */}
+            <BlobPreloader url={VIDEOS.L1_ENDING} />
+            <VideoPlayer 
+              key="video-click-pixel"
+              ref={clickVideoRef}
+              sourceSrc={VIDEOS.L1_CLICK_PIXEL}
+              className={styles.bg_video} 
+              autoPlay 
+              muted={false} 
+              playsInline
+              onEnded={() => setLevelStage('OUTRO')}
+              onTimeUpdate={(e) => {
+                const video = e.currentTarget;
+                if (video.duration && video.currentTime >= video.duration - 0.5) {
+                  setLevelStage('OUTRO');
+                }
+              }}
+              style={{ zIndex: 0 }}
+            />
+          </>
         )}
 
         {userConstant && (

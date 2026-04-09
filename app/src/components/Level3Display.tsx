@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
 import { VideoPlayer } from './VideoPlayer';
+import { BlobPreloader } from './BlobPreloader';
 import styles from './LevelDisplay.module.css';
 import { VIDEOS, AUDIO, getLensImage } from '../assets/mediaManifest';
 
@@ -27,6 +28,8 @@ export function Level3Display() {
   if (levelStage === 'INTRO') {
      return (
        <div className={styles.transition_container}>
+         {/* Preload interactive video while intro plays */}
+         <BlobPreloader url={VIDEOS.L3_INTERACT} />
          <VideoPlayer 
            sourceSrc={VIDEOS.L3_PIANO_INTRO}
            autoPlay 
@@ -41,6 +44,8 @@ export function Level3Display() {
   if (levelStage === 'INTERACT') {
     return (
       <div className={styles.layer_container}>
+        {/* Preload finale montage while this interactive scene plays */}
+        <BlobPreloader url={VIDEOS.FINALE_MONTAGE} />
         <VideoPlayer 
           key="l3-interact"
           ref={videoRef}
