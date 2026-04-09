@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
 import styles from './Level0.module.css';
 import { Terminal } from 'lucide-react';
+import { VideoPlayer } from './VideoPlayer';
 
 export function Level0() {
   const { setLevel, levelStage, setLevelStage } = useLaplaceStore();
@@ -16,7 +17,8 @@ export function Level0() {
   if (levelStage === 'TIME_DOMAIN_VIDEO') {
     return (
       <div className={styles.container} style={{ background: '#000', padding: 0 }}>
-        <video 
+        <VideoPlayer 
+          sourceSrc="/preloads/Introduction(I)-the-time-domain.mp4"
           autoPlay 
           playsInline 
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -24,9 +26,7 @@ export function Level0() {
             setLevel(1);
             setLevelStage('CLI');
           }}
-        >
-          <source src="/preloads/Introduction(I)-the-time-domain.mp4" type="video/mp4" />
-        </video>
+        />
       </div>
     );
   }

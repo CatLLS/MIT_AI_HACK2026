@@ -9,6 +9,7 @@ import { Level5AudioSequence } from './components/Level5AudioSequence';
 import { CRTOverlay } from './components/CRTOverlay';
 import { LoadingScreen } from './components/LoadingScreen';
 import { useAssetPreloader } from './hooks/useAssetPreloader';
+import { VideoPlayer } from './components/VideoPlayer';
 import './index.css';
 import { useEffect } from 'react';
 
@@ -77,7 +78,8 @@ function App() {
       {/* MONTAGE: fullscreen video before level 5 */}
       {levelStage === 'MONTAGE' && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 8500, background: '#000' }}>
-          <video
+          <VideoPlayer
+            sourceSrc="/preloads/climax/finaleMontage.mp4"
             autoPlay
             playsInline
             muted={false}
@@ -86,9 +88,7 @@ function App() {
               setLevel(5);
               setLevelStage('CLI');
             }}
-          >
-            <source src="/preloads/climax/finaleMontage.mp4" type="video/mp4" />
-          </video>
+          />
         </div>
       )}
 

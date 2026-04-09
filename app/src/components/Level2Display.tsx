@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
+import { VideoPlayer } from './VideoPlayer';
 import styles from './LevelDisplay.module.css';
 
 export function Level2Display() {
@@ -64,14 +65,13 @@ export function Level2Display() {
   if (levelStage === 'INTRO') {
      return (
        <div className={styles.transition_container}>
-         <video 
+         <VideoPlayer 
+           sourceSrc="/preloads/level2/level2Intro.mp4"
            autoPlay 
            muted={false} 
            playsInline className={styles.transition_video}
            onEnded={() => setLevelStage('INTERACT')}
-         >
-           <source src="/preloads/level2/level2Intro.mov" type="video/mp4" />
-         </video>
+         />
        </div>
      );
   }
@@ -79,7 +79,8 @@ export function Level2Display() {
   if (levelStage === 'OUTRO') {
      return (
        <div className={styles.transition_container}>
-         <video 
+         <VideoPlayer 
+           sourceSrc="/preloads/level2/Level2End.mp4"
            autoPlay 
            muted={false} 
            playsInline className={styles.transition_video}
@@ -87,9 +88,7 @@ export function Level2Display() {
              setLevel(3);
              setLevelStage('CLI');
            }}
-         >
-           <source src="/preloads/level2/Level2End.mp4" type="video/mp4" />
-         </video>
+         />
        </div>
      );
   }
@@ -108,8 +107,9 @@ export function Level2Display() {
         }} />
 
         {!isGlitching && !showPopup && !useLaplaceStore.getState().minigameSave && (
-          <video 
+          <VideoPlayer 
             key="video-clean"
+            sourceSrc="/preloads/level2/girl&boy(clean).mp4"
             autoPlay 
             muted={false} 
             playsInline 
@@ -119,9 +119,7 @@ export function Level2Display() {
               setShowPopup(true);
             }}
             style={{ position: 'absolute', inset: 0, zIndex: 1, mixBlendMode: 'normal' }}
-          >
-            <source src="/preloads/level2/girl&boy(clean).webm" type="video/webm" />
-          </video>
+          />
         )}
 
         {showPopup && (
@@ -151,16 +149,15 @@ export function Level2Display() {
 
         {isGlitching && !minigameWon && (
           <>
-            <video 
+            <VideoPlayer 
+              sourceSrc="/preloads/level2/girl&boyGlitch.mp4"
               autoPlay 
               loop
               muted={false} 
               playsInline 
               className={styles.bg_video}
               style={{ position: 'absolute', inset: 0, zIndex: 1 }}
-            >
-              <source src="/preloads/level2/girl&boyGlitch.mov" />
-            </video>
+            />
 
             <div className={styles.damping_ui}>
               <div style={{ color: '#ff003c', fontSize: '1.5rem', marginBottom: '1rem' }}>STABILITY TIMER: {timer}s</div>

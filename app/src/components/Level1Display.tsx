@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
+import { VideoPlayer } from './VideoPlayer';
 import styles from './LevelDisplay.module.css';
 
 export function Level1Display() {
@@ -52,14 +53,13 @@ export function Level1Display() {
   if (levelStage === 'INTRO') {
      return (
        <div className={styles.transition_container}>
-         <video 
+         <VideoPlayer 
+           sourceSrc="/preloads/level1/level0DotIntro.mp4"
            autoPlay 
            muted={false} 
            playsInline className={styles.transition_video}
            onEnded={() => setLevelStage('INTERACT')}
-         >
-           <source src="/preloads/level1/level0DotIntro.mp4" type="video/mp4" />
-         </video>
+         />
        </div>
      );
   }
@@ -67,14 +67,13 @@ export function Level1Display() {
   if (levelStage === 'OUTRO') {
      return (
        <div className={styles.transition_container}>
-         <video 
+         <VideoPlayer 
+           sourceSrc="/preloads/level1/dotLevelEnding.mp4"
            autoPlay 
            muted={false} 
            playsInline className={styles.transition_video}
            onEnded={() => setLevelStage('PRE_INTERACT')} // A stage to transition to Level 2
-         >
-           <source src="/preloads/level1/dotLevelEnding.mov" type="video/mp4" />
-         </video>
+         />
        </div>
      );
   }
@@ -90,9 +89,10 @@ export function Level1Display() {
     return (
       <div className={styles.layer_container}>
         {clickedConstant && (
-          <video 
+          <VideoPlayer 
             key="video-click-pixel"
             ref={clickVideoRef}
+            sourceSrc="/preloads/level1/videoClickOnPixel.mp4"
             className={styles.bg_video} 
             autoPlay 
             muted={false} 
@@ -107,9 +107,7 @@ export function Level1Display() {
               }
             }}
             style={{ zIndex: 0 }}
-          >
-            <source src="/preloads/level1/videoClickOnPixel.mp4" type="video/mp4" />
-          </video>
+          />
         )}
 
         {userConstant && (

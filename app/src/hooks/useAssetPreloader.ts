@@ -19,12 +19,12 @@ const INITIAL_ASSETS: Asset[] = [
 
 const BACKGROUND_ASSETS: Asset[] = [
   // The rest load silently in the background while Level 0 is playing
-  { url: '/preloads/level1/dotLevelEnding.mov', type: 'video' },
-  { url: '/preloads/level2/level2Intro.mov', type: 'video' },
+  { url: '/preloads/level1/dotLevelEnding.mp4', type: 'video' },
+  { url: '/preloads/level2/level2Intro.mp4', type: 'video' },
   { url: '/preloads/level2/Level2End.mp4', type: 'video' },
-  { url: '/preloads/level2/girl&boy(clean).webm', type: 'video' },
-  { url: '/preloads/level2/girl&boyGlitch.mov', type: 'video' },
-  { url: '/preloads/level3/PianoIntro.mov', type: 'video' },
+  { url: '/preloads/level2/girl&boy(clean).mp4', type: 'video' },
+  { url: '/preloads/level2/girl&boyGlitch.mp4', type: 'video' },
+  { url: '/preloads/level3/PianoIntro.mp4', type: 'video' },
   { url: '/preloads/level3/level3Interact.mp4', type: 'video' },
   { url: '/preloads/climax/finaleMontage.mp4', type: 'video' },
 

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
+import { VideoPlayer } from './VideoPlayer';
 import styles from './LevelDisplay.module.css';
 
 export function Level3Display() {
@@ -25,14 +26,13 @@ export function Level3Display() {
   if (levelStage === 'INTRO') {
      return (
        <div className={styles.transition_container}>
-         <video 
+         <VideoPlayer 
+           sourceSrc="/preloads/level3/PianoIntro.mp4"
            autoPlay 
            muted={false} 
            playsInline className={styles.transition_video}
            onEnded={() => setLevelStage('INTERACT')}
-         >
-           <source src="/preloads/level3/PianoIntro.mov" />
-         </video>
+         />
        </div>
      );
   }
@@ -40,9 +40,10 @@ export function Level3Display() {
   if (levelStage === 'INTERACT') {
     return (
       <div className={styles.layer_container}>
-        <video 
+        <VideoPlayer 
           key="l3-interact"
           ref={videoRef}
+          sourceSrc="/preloads/level3/level3Interact.mp4"
           className={styles.bg_video} 
           autoPlay 
           muted={false}
@@ -54,9 +55,7 @@ export function Level3Display() {
               handleVideoEnded();
             }
           }}
-        >
-          <source src="/preloads/level3/level3Interact.mp4" type="video/mp4" />
-        </video>
+        />
 
         {interactFinished && (
           <>
