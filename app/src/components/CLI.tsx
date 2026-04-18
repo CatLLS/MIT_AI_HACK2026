@@ -87,7 +87,7 @@ export function CLI() {
         '1: The ghost of a memory that feels more real than the present. [Nostalgia]',
         '2: The curiosity about what happens on the very last page I’ll never read. [Longing]',
         '3: The cold comfort of knowing that 1 + 1 will always equal 2. [Logic]',
-        '4: The laughter of a mind finally set free from its own boundaries. [insanity]',
+        '4: The laughter of a mind finally set free from its own boundaries. [Insanity]',
         '(Insert an option from 1 to 4):_'
       ]);
     } else if (level === 2) {
@@ -155,7 +155,7 @@ export function CLI() {
         '1': 'Nostalgia',
         '2': 'Longing',
         '3': 'Logic',
-        '4': 'insanity'
+        '4': 'Insanity'
       };
       if (!mapping[val]) {
         setLogs((prev) => [...prev, `>> ${val}`, '[ERROR] Invalid choice. Choose 1, 2, 3, or 4.']);
