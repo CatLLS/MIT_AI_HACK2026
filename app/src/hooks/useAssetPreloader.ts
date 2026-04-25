@@ -11,14 +11,16 @@ import { useLaplaceStore } from '../store/useLaplaceStore';
 
 const INITIAL_URLS: string[] = [
   AUDIO.LANDING_SONG,
-  VIDEOS.TIME_DOMAIN_INTRO,
-  VIDEOS.L1_DOT_INTRO,
   AUDIO.L1_NARRATOR,
 ];
 
 const LEVEL_ASSETS: Record<number, string[]> = {
   // Preloaded right after loading screen dismisses (user on Level 0 landing)
   1: [
+    VIDEOS.TIME_DOMAIN_INTRO_PT1,
+    VIDEOS.TIME_DOMAIN_INTRO_PT2,
+    VIDEOS.TIME_DOMAIN_INTRO_PT3,
+    VIDEOS.L1_DOT_INTRO,
     VIDEOS.L1_CLICK_PIXEL,
     VIDEOS.L1_ENDING,
     AUDIO.L1_WHISPER,

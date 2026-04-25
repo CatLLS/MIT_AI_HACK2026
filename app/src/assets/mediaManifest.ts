@@ -17,7 +17,9 @@
 // ── VIDEOS ───────────────────────────────────────────────────────────────────
 export const VIDEOS = {
   // Level 0 → Level 1 transition
-  TIME_DOMAIN_INTRO: "https://storage.googleapis.com/laplace-transform/Introduction(I)-the-time-domain.mp4",
+  TIME_DOMAIN_INTRO_PT1: "https://storage.googleapis.com/laplace-transform/introDomainPt1.mp4",
+  TIME_DOMAIN_INTRO_PT2: "https://storage.googleapis.com/laplace-transform/introDomainPt2.mp4",
+  TIME_DOMAIN_INTRO_PT3: "https://storage.googleapis.com/laplace-transform/IntroDomainPt3.mp4",
 
   // Level 1
   L1_DOT_INTRO: "https://storage.googleapis.com/laplace-transform/level0DotIntro.mp4",   // intro video before interaction

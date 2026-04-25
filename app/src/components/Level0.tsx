@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
 import styles from './Level0.module.css';
 import { Terminal } from 'lucide-react';
@@ -7,6 +7,7 @@ import { VIDEOS, AUDIO } from '../assets/mediaManifest';
 
 export function Level0() {
   const { setLevel, levelStage, setLevelStage } = useLaplaceStore();
+  const [videoPart, setVideoPart] = useState<1 | 2 | 3>(1);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
@@ -18,16 +19,39 @@ export function Level0() {
   if (levelStage === 'TIME_DOMAIN_VIDEO') {
     return (
       <div className={styles.container} style={{ background: '#000', padding: 0 }}>
-        <VideoPlayer 
-          sourceSrc={VIDEOS.TIME_DOMAIN_INTRO}
-          autoPlay 
-          playsInline 
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-          onEnded={() => {
-            setLevel(1);
-            setLevelStage('CLI');
-          }}
-        />
+        {videoPart === 1 && (
+          <VideoPlayer 
+            key="part1"
+            sourceSrc={VIDEOS.TIME_DOMAIN_INTRO_PT1}
+            autoPlay 
+            playsInline 
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            onEnded={() => setVideoPart(2)}
+          />
+        )}
+        {videoPart === 2 && (
+          <VideoPlayer 
+            key="part2"
+            sourceSrc={VIDEOS.TIME_DOMAIN_INTRO_PT2}
+            autoPlay 
+            playsInline 
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            onEnded={() => setVideoPart(3)}
+          />
+        )}
+        {videoPart === 3 && (
+          <VideoPlayer 
+            key="part3"
+            sourceSrc={VIDEOS.TIME_DOMAIN_INTRO_PT3}
+            autoPlay 
+            playsInline 
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            onEnded={() => {
+              setLevel(1);
+              setLevelStage('CLI');
+            }}
+          />
+        )}
       </div>
     );
   }
