@@ -7,7 +7,6 @@ import { useLaplaceStore } from '../store/useLaplaceStore';
 import katex from 'katex';
 import styles from './Climax360.module.css';
 import { AUDIO, IMAGES, OTHER } from '../assets/mediaManifest';
-import { consumeBlob } from '../lib/blobCache';
 
 // Register Spark components with R3F
 extend({ SplatMesh, SparkRenderer });
@@ -223,15 +222,9 @@ export function Climax360() {
   const [creditsText, setCreditsText] = useState("");
   const musicRef = useRef<HTMLAudioElement>(null);
 
-  // Consume a pre-warmed blob URL for the splat (loaded by Level5AudioSequence's BlobPreloader).
-  // Falls back to the CDN URL if not ready. Release fn called on unmount.
-  const [{ splatUrl, releaseSplat }] = useState(() => {
-    const consumed = consumeBlob(OTHER.SPLAT_WORLD);
-    if (consumed) return { splatUrl: consumed.blobUrl, releaseSplat: consumed.release };
-    return { splatUrl: OTHER.SPLAT_WORLD, releaseSplat: () => {} };
-  });
-
-  useEffect(() => () => releaseSplat(), [releaseSplat]);
+  // The splat was pre-warmed into browser disk cache by useSplatPreloader().
+  // Spark's internal fetch for the same URL will be served from disk instantly.
+  const splatUrl = OTHER.SPLAT_WORLD;
 
   // Load credits
   useEffect(() => {

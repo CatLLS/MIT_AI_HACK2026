@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
 import { VideoPlayer } from './VideoPlayer';
-import { BlobPreloader } from './BlobPreloader';
+
 import styles from './LevelDisplay.module.css';
 import { VIDEOS, AUDIO, getConstantImage } from '../assets/mediaManifest';
 
@@ -52,8 +52,6 @@ export function Level1Display() {
   if (levelStage === 'INTRO') {
      return (
        <div className={styles.transition_container}>
-         {/* Preload the first interactive video while intro plays */}
-         <BlobPreloader url={VIDEOS.L1_CLICK_PIXEL} />
          <VideoPlayer 
            sourceSrc={VIDEOS.L1_DOT_INTRO}
            autoPlay 
@@ -68,8 +66,6 @@ export function Level1Display() {
   if (levelStage === 'OUTRO') {
      return (
        <div className={styles.transition_container}>
-         {/* Preload Level 2 intro while this outro plays */}
-         <BlobPreloader url={VIDEOS.L2_INTRO} />
          <VideoPlayer 
            sourceSrc={VIDEOS.L1_ENDING}
            autoPlay 
@@ -93,8 +89,6 @@ export function Level1Display() {
       <div className={styles.layer_container}>
         {clickedConstant && (
           <>
-            {/* Preload outro while click animation plays */}
-            <BlobPreloader url={VIDEOS.L1_ENDING} />
             <VideoPlayer 
               key="video-click-pixel"
               ref={clickVideoRef}

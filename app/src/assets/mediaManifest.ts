@@ -1,16 +1,17 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // LAPLACE.TRANSFORM — Media Asset Manifest
 //
-// All media is served from Vercel Blob for fast, globally cached streaming.
-// Paste each Blob URL below after uploading the file. Once all links are filled
-// in, the components automatically receive the updated URLs — no other changes
-// needed.
+// All media is served from Google Cloud Storage (GCS) for fast, globally
+// cached streaming. Update a URL here and HMR will pick it up instantly.
 //
-// HOW TO USE:
-//   1. Upload the file to Vercel Blob (Storage → Blob → Upload)
-//   2. Copy the public URL
-//   3. Replace the "INSERT_BLOB_URL_HERE" placeholder below
-//   4. Save — HMR will hot-reload it instantly
+// HOW TO ADD / UPDATE AN ASSET:
+//   1. Upload the file to the GCS bucket (laplace-transform)
+//   2. Copy the public URL: https://storage.googleapis.com/laplace-transform/<filename>
+//   3. Paste it below — all components receive the URL automatically.
+//
+// CACHE HEADERS (important for smooth playback):
+//   Run once after uploading new files to set long-lived cache headers:
+//   gsutil -m setmeta -h "Cache-Control:public, max-age=31536000" "gs://laplace-transform/**"
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ── VIDEOS ───────────────────────────────────────────────────────────────────

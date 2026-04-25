@@ -3,7 +3,6 @@ import { useLaplaceStore } from '../store/useLaplaceStore';
 import styles from './Level0.module.css';
 import { Terminal } from 'lucide-react';
 import { VideoPlayer } from './VideoPlayer';
-import { BlobPreloader } from './BlobPreloader';
 import { VIDEOS, AUDIO } from '../assets/mediaManifest';
 
 export function Level0() {
@@ -19,8 +18,6 @@ export function Level0() {
   if (levelStage === 'TIME_DOMAIN_VIDEO') {
     return (
       <div className={styles.container} style={{ background: '#000', padding: 0 }}>
-        {/* Preload next video while this one plays */}
-        <BlobPreloader url={VIDEOS.L1_DOT_INTRO} />
         <VideoPlayer 
           sourceSrc={VIDEOS.TIME_DOMAIN_INTRO}
           autoPlay 

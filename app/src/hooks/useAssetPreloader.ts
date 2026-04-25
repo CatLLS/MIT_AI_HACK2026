@@ -2,7 +2,16 @@ import { useState, useEffect } from 'react';
 import { VIDEOS, AUDIO, IMAGES, OTHER } from '../assets/mediaManifest';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Asset lists — split into INITIAL (blocks loading screen) and BACKGROUND (silent)
+// Asset lists
+//
+// INITIAL_URLS  — fetched before the loading screen dismisses.
+// BACKGROUND_URLS — fetched silently while the user is on the landing page.
+//
+// WHY NOT INCLUDE THE SPLAT HERE:
+//   OTHER.SPLAT_WORLD (~33 MB) is only needed at Level 6. The user spends
+//   several minutes in the Level 5 audio sequence before reaching it.
+//   useSplatPreloader() in Level5AudioSequence handles it lazily so we don't
+//   burn mobile bandwidth up front.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const INITIAL_URLS: string[] = [
@@ -45,39 +54,56 @@ const BACKGROUND_URLS: string[] = [
   IMAGES.L3_GIRL_LOGIC,
   IMAGES.L3_GIRL_VELOCITY,
   IMAGES.L3_GIRL_DAMPING,
-  OTHER.SPLAT_WORLD,
   OTHER.CREDITS_TXT,
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Core fetch-based loader
-//
-// WHY FETCH INSTEAD OF <video preload="auto">:
-//   Hidden video elements are evicted by the browser under memory pressure.
-//   fetch() writes the full response to the browser's HTTP cache which persists
-//   reliably. When the <video> element later requests the same URL, the network
-//   layer serves it from cache instantly — zero stutter, zero network round-trip.
-//
-//   This only works correctly when the server sends proper Accept-Ranges +
-//   Cache-Control headers (see vercel.json).
+// Session guard — skip the loading screen on refresh if we already ran this
+// session. Assets are in the browser's HTTP disk cache; the loading screen
+// would flash and immediately disappear, which looks broken.
 // ─────────────────────────────────────────────────────────────────────────────
-async function cacheUrl(url: string): Promise<void> {
+const SESSION_KEY = 'laplace_preloaded';
+
+function alreadyPreloaded(): boolean {
   try {
-    const response = await fetch(url, {
-      // 'force-cache' returns a cached response if one exists, otherwise fetches
-      // and stores it. Perfect for preloading: first visit downloads + caches,
-      // subsequent visits or <video> element requests are instant.
-      cache: 'force-cache',
-    });
-    // Consume the body so the browser actually writes it to cache
+    return sessionStorage.getItem(SESSION_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function markPreloaded(): void {
+  try {
+    sessionStorage.setItem(SESSION_KEY, '1');
+  } catch {
+    // sessionStorage unavailable (private browsing restrictions) — safe to ignore
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Core fetch-based preloader
+//
+// WHY fetch() INSTEAD OF <video preload="auto">:
+//   Hidden <video> elements are evicted by the browser under memory pressure.
+//   fetch() with cache:'force-cache' writes the full response to the browser's
+//   HTTP disk cache. When the <video> element later requests the same URL, the
+//   browser serves it from disk instantly — zero stutter, zero network round-
+//   trip, network-failure-resilient after first load.
+//
+//   Requires the server to send proper Cache-Control + Accept-Ranges headers
+//   (set these on the GCS bucket via gsutil — see implementation plan).
+// ─────────────────────────────────────────────────────────────────────────────
+export async function cacheUrl(url: string): Promise<void> {
+  try {
+    const response = await fetch(url, { cache: 'force-cache' });
+    // Consume the body so the browser writes the full response to disk cache.
     await response.arrayBuffer();
   } catch (e) {
-    // Non-fatal — log and move on. The experience can still work, just may stutter.
     console.warn(`[Preloader] Failed to cache: ${url}`, e);
   }
 }
 
-const BATCH_SIZE = 3; // Max concurrent fetches — avoids overwhelming a CDN connection pool
+const BATCH_SIZE = 5; // GCS handles more concurrent connections than Vercel CDN
 
 async function cacheAll(urls: string[], onEach?: () => void): Promise<void> {
   for (let i = 0; i < urls.length; i += BATCH_SIZE) {
@@ -95,10 +121,13 @@ async function cacheAll(urls: string[], onEach?: () => void): Promise<void> {
 // Hook
 // ─────────────────────────────────────────────────────────────────────────────
 export function useAssetPreloader() {
-  const [progress, setProgress] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [progress, setProgress] = useState(() => alreadyPreloaded() ? 100 : 0);
+  const [isLoaded, setIsLoaded] = useState(alreadyPreloaded);
 
   useEffect(() => {
+    // If we already ran this session (e.g. hot-reload / refresh), skip entirely.
+    if (alreadyPreloaded()) return;
+
     let loaded = 0;
     const total = INITIAL_URLS.length;
 
@@ -108,12 +137,13 @@ export function useAssetPreloader() {
     };
 
     async function run() {
-      // Phase 1 — blocks the loading screen
+      // Phase 1 — block the loading screen until critical assets are cached
       await cacheAll(INITIAL_URLS, onInitialProgress);
 
       setTimeout(() => {
         setIsLoaded(true);
-        // Phase 2 — silent background caching while the user is in Level 0
+        markPreloaded();
+        // Phase 2 — silent background caching while the user is on Level 0
         cacheAll(BACKGROUND_URLS);
       }, 600);
     }

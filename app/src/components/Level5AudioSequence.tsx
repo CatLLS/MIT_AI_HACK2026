@@ -1,15 +1,20 @@
 import { useState } from 'react';
 import { useLaplaceStore } from '../store/useLaplaceStore';
 import { PanoramaView } from './PanoramaView';
-import { BlobPreloader } from './BlobPreloader';
+import { useSplatPreloader } from '../hooks/useSplatPreloader';
 import styles from './Climax360.module.css';
-import { AUDIO, OTHER } from '../assets/mediaManifest';
+import { AUDIO } from '../assets/mediaManifest';
 
 type AudioPhase = 'audio14' | 'audio16' | 'audio17' | 'prompt';
 
 export function Level5AudioSequence() {
   const { setLevelStage, setLevel } = useLaplaceStore();
   const [audioPhase, setAudioPhase] = useState<AudioPhase>('audio14');
+
+  // Prime the gaussian splat into browser disk cache while the user listens
+  // to the audio sequence. The splat takes ~33 MB — the user has several minutes
+  // to let it download before Climax360 mounts.
+  useSplatPreloader();
 
   const handleDeath = () => {
     setLevelStage('DEATH');
@@ -21,9 +26,6 @@ export function Level5AudioSequence() {
 
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>
-      {/* Preload the 3D gaussian splat while user is in the audio sequence.
-          The user spends several minutes here — the 33MB file should be ready. */}
-      <BlobPreloader url={OTHER.SPLAT_WORLD} />
       <div className={styles.hud_instructions} style={{ zIndex: 7000, pointerEvents: 'none' }}>
         DRAG TO LOOK AROUND
       </div>
