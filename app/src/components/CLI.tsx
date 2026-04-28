@@ -3,6 +3,28 @@ import { useLaplaceStore } from '../store/useLaplaceStore';
 import type { LensType } from '../store/useLaplaceStore';
 import styles from './CLI.module.css';
 
+let sharedAudioCtx: AudioContext | null = null;
+const playTypingSound = () => {
+  try {
+    if (!sharedAudioCtx) {
+      sharedAudioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    }
+    if (sharedAudioCtx.state === 'suspended') {
+      sharedAudioCtx.resume();
+    }
+    const osc = sharedAudioCtx.createOscillator();
+    const gain = sharedAudioCtx.createGain();
+    osc.type = 'sine'; // A softer retro sound
+    osc.frequency.setValueAtTime(800 + Math.random() * 200, sharedAudioCtx.currentTime);
+    gain.gain.setValueAtTime(0.05, sharedAudioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, sharedAudioCtx.currentTime + 0.05);
+    osc.connect(gain);
+    gain.connect(sharedAudioCtx.destination);
+    osc.start();
+    osc.stop(sharedAudioCtx.currentTime + 0.05);
+  } catch (e) {}
+};
+
 function TypewriterLine({ text, instant, onDone }: { text: string; instant?: boolean; onDone?: () => void }) {
   const [content, setContent] = useState('');
   const onDoneRef = useRef(onDone);
@@ -23,6 +45,9 @@ function TypewriterLine({ text, instant, onDone }: { text: string; instant?: boo
     let i = 0;
     const interval = setInterval(() => {
       setContent(text.substring(0, i + 1));
+      if (text[i] && text[i] !== ' ') {
+        playTypingSound();
+      }
       i++;
       if (i >= text.length) {
         clearInterval(interval);
@@ -223,23 +248,24 @@ export function CLI() {
             }
             return <div key={i} className={styles.log_line}>{displayText}</div>;
           })}
+          
+          {level < 5 && renderedCount === logs.length && !isTyping && (
+            <form className={styles.input_line} onSubmit={handleSubmit}>
+              <span className={styles.prompt}>{'>'}</span>
+              <input 
+                type="text" 
+                autoFocus
+                className={styles.input}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder="Awaiting choice..."
+              />
+              <span className={styles.cursor}></span>
+            </form>
+          )}
+          
           <div ref={bottomRef} />
         </div>
-        
-        {level < 5 && renderedCount === logs.length && !isTyping && (
-          <form className={styles.input_line} onSubmit={handleSubmit}>
-            <span className={styles.prompt}>{'>'}</span>
-            <input 
-              type="text" 
-              autoFocus
-              className={styles.input}
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Awaiting choice..."
-            />
-            <span className={styles.cursor}></span>
-          </form>
-        )}
       </div>
     </div>
   );
