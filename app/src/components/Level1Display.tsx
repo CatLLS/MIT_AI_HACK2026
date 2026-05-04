@@ -126,6 +126,7 @@ export function Level1Display() {
             <img 
               src={getConstantImage(userConstant)}
               alt={userConstant} 
+              crossOrigin="anonymous"
             />
             {!clickedConstant && <span className={styles.orb_label}>{userConstant}</span>}
           </div>
