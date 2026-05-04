@@ -14,21 +14,21 @@ const playTypingSound = () => {
     }
     const osc = sharedAudioCtx.createOscillator();
     const gain = sharedAudioCtx.createGain();
-    osc.type = 'sine'; // A softer retro sound
-    osc.frequency.setValueAtTime(800 + Math.random() * 200, sharedAudioCtx.currentTime);
+    osc.type = 'square'; // A softer retro sound
+    osc.frequency.setValueAtTime(100 + Math.random() * 50, sharedAudioCtx.currentTime);//this line controls the pitch, lower the number to deepen the sound
     gain.gain.setValueAtTime(0.05, sharedAudioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, sharedAudioCtx.currentTime + 0.05);
     osc.connect(gain);
     gain.connect(sharedAudioCtx.destination);
     osc.start();
     osc.stop(sharedAudioCtx.currentTime + 0.05);
-  } catch (e) {}
+  } catch (e) { }
 };
 
 function TypewriterLine({ text, instant, onDone }: { text: string; instant?: boolean; onDone?: () => void }) {
   const [content, setContent] = useState('');
   const onDoneRef = useRef(onDone);
-  
+
   useEffect(() => {
     onDoneRef.current = onDone;
   }, [onDone]);
@@ -62,15 +62,15 @@ function TypewriterLine({ text, instant, onDone }: { text: string; instant?: boo
 }
 
 export function CLI() {
-  const { 
-    level, 
+  const {
+    level,
     sigma,
-    setConstant, 
-    setHabit, 
-    setLens, 
-    setFinalAnswer 
+    setConstant,
+    setHabit,
+    setLens,
+    setFinalAnswer
   } = useLaplaceStore();
-  
+
   const [logs, setLogs] = useState<string[]>([]);
   const [renderedCount, setRenderedCount] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
@@ -174,7 +174,7 @@ export function CLI() {
 
     const val = inputValue.trim();
     setInputValue('');
-    
+
     if (level === 1) {
       const mapping: Record<string, string> = {
         '1': 'Nostalgia',
@@ -220,7 +220,7 @@ export function CLI() {
     } else if (level === 5) {
       setLogs((prev) => [...prev, `>> ${val}`]);
       if (val.toLowerCase() === 'y') {
-        useLaplaceStore.getState().setLevel(6); 
+        useLaplaceStore.getState().setLevel(6);
       }
     }
   };
@@ -234,26 +234,26 @@ export function CLI() {
           {logs.slice(0, renderedCount).map((log, i) => {
             const isInstant = log.startsWith('>> ');
             const displayText = isInstant ? log.replace('>> ', '> ') : log;
-            
+
             if (i === renderedCount - 1 && isTyping) {
               return (
                 <div key={i} className={styles.log_line}>
-                  <TypewriterLine 
-                    text={displayText} 
+                  <TypewriterLine
+                    text={displayText}
                     instant={isInstant}
-                    onDone={() => setIsTyping(false)} 
+                    onDone={() => setIsTyping(false)}
                   />
                 </div>
               );
             }
             return <div key={i} className={styles.log_line}>{displayText}</div>;
           })}
-          
+
           {level < 5 && renderedCount === logs.length && !isTyping && (
             <form className={styles.input_line} onSubmit={handleSubmit}>
               <span className={styles.prompt}>{'>'}</span>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 autoFocus
                 className={styles.input}
                 value={inputValue}
@@ -263,7 +263,7 @@ export function CLI() {
               <span className={styles.cursor}></span>
             </form>
           )}
-          
+
           <div ref={bottomRef} />
         </div>
       </div>

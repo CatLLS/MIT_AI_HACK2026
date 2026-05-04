@@ -50,8 +50,8 @@
 
 .log_line {
   margin-bottom: 8px;
-  color: #bb00ff;
-  text-shadow: 0 0 6px #bb00ff, 0 0 12px rgba(187, 0, 255, 0.8);
+  color: #9900ff;
+  text-shadow: 0 0 6px #9900ff, 0 0 12px rgba(153, 0, 255, 0.8);
 }
 
 .input_line {
