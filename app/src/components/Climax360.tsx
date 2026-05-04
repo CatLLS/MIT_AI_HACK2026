@@ -311,7 +311,7 @@ export function Climax360() {
             ))}
 
             {/* Logo at the end of scroll */}
-            <img src={IMAGES.MIT_HACK_LOGO} className={styles.mithack_logo} alt="MIT Hack" />
+            <img src={IMAGES.MIT_HACK_LOGO} className={styles.mithack_logo} alt="MIT Hack" crossOrigin="anonymous" />
           </div>
         </div>
       )}
