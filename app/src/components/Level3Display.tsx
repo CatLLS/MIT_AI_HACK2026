@@ -74,7 +74,8 @@ export function Level3Display() {
               <img 
                 src={getLensImage(userLens)}
                 className={styles.lens_reflection_fade}
-                alt={userLens} 
+                alt={userLens}
+                crossOrigin="anonymous"
               />
             )}
           </>
