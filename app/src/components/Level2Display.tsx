@@ -98,15 +98,20 @@ export function Level2Display() {
   if (levelStage === 'INTERACT') {
     return (
       <div className={styles.layer_container}>
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: `url(${getSkyImage(userHabit || '')})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          filter: minigameWon ? 'grayscale(100%) brightness(0.7)' : 'none',
-          transition: 'filter 2s ease'
-        }} />
+        <img
+          src={getSkyImage(userHabit || '')}
+          crossOrigin="anonymous"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            filter: minigameWon ? 'grayscale(100%) brightness(0.7)' : 'none',
+            transition: 'filter 2s ease'
+          }}
+          alt=""
+        />
 
         {!isGlitching && !showPopup && !useLaplaceStore.getState().minigameSave && (
           <>
